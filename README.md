@@ -11,7 +11,9 @@ BootstrapFX: We are using this for modern UI styling based on Bootstrap, so you 
 ControlsFX: This is included for additional UI components like notifications and dialogs, which we may need for admin features.
 FormsFX: FormsFX helps simplify form creation and validation, which will be useful for user registration and profile updates.
 Database: SQLite is currently set up for local development, but we are aiming to switch to PostgreSQL for better scalability and more complex queries.
-Project Structure
+
+
+Project Structure (Click on raw to display properly)
 
 src/
 └── main/
