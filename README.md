@@ -13,7 +13,23 @@ FormsFX: FormsFX helps simplify form creation and validation, which will be usef
 Database: SQLite is currently set up for local development, but we are aiming to switch to PostgreSQL for better scalability and more complex queries.
 Project Structure
 
-src/ └── main/ ├── javafx/ │ ├── model/ │ │ ├── User.java (Normal User) │ │ ├── AdminUser.java (extends User) │ │ ├── GuestUser.java (extends User) // Might change later to have User extend Guest? │ │ └── Scroll.java (represents a digital scroll) │ ├── controller/ │ │ ├── UserController.java (handles user-related logic) │ │ └── ScrollController.java (scaffolded, handles scroll actions) │ └── view/ │ └── Register.fxml (basic user registration form) ├── resources/ │ └── views/ (all FXML files go here) └── database/ └── Database.java (manages DB connection)
+src/
+└── main/
+├── javafx/
+│    ├── model/
+│    │    ├── User.java (Normal User)
+│    │    ├── AdminUser.java (extends User)
+│    │    ├── GuestUser.java (extends User) // Might change later to have User extend Guest?
+│    │    └── Scroll.java (represents a digital scroll)
+│    ├── controller/
+│    │    ├── UserController.java (handles user-related logic)
+│    │    └── ScrollController.java (scaffolded, handles scroll actions)
+│    └── view/
+│         └── Register.fxml (basic user registration form)
+├── resources/
+│    └── views/ (all FXML files go here)
+└── database/
+└── Database.java (manages DB connection)
 
 What Needs to Be Done
 
