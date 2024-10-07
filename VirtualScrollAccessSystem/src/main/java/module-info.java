@@ -7,6 +7,7 @@ module vsas {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 
     opens javafx to javafx.fxml;
     exports javafx;
