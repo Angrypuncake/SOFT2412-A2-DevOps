@@ -1,19 +1,28 @@
 package javafx.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.model.User;
-import java.util.UUID;
+import database.Database;
 
-//Database
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import database.Database;
+import java.util.UUID;
 
-public class UserController {
+import javafx.stage.Stage;
+import javafx.utils.HashUtils;
+
+import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
+import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
+
+public class RegisterController {
 
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
@@ -36,22 +45,28 @@ public class UserController {
             return;
         }
 
-        // Proceed with registration (this is where you'd add database logic)
+        // Hash the password before storing it
+        String hashedPassword = HashUtils.hashPassword(password);
+
+        // Proceed with registration and store the user in the database
         try (Connection connection = Database.getConnection()) {
             String insertUser = "INSERT INTO users (id, username, password, email, phone, userType) VALUES (?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(insertUser)) {
                 statement.setString(1, id);
                 statement.setString(2, username);
-                statement.setString(3, password); // We should hash the password as storing raw password isnt safe
+                statement.setString(3, hashedPassword);  // Store the hashed password
                 statement.setString(4, email);
                 statement.setString(5, phone);
-                statement.setString(6, "Normal"); //defaulting to normal, we can change this later if needed
+                statement.setString(6, "Normal");  // Default user type is "Normal"
 
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
                     errorMessageLabel.setText("User successfully registered!");
-                    System.out.println("User " + username + " successfully registered!");
+                    clearFields();  // Clear fields after successful registration
+                    // Go to main homepage
+                    goToUserHomePage();
+
                 } else {
                     errorMessageLabel.setText("Registration failed!");
                 }
@@ -61,10 +76,27 @@ public class UserController {
             e.printStackTrace();
         }
 
-
-        // Example of adding a new user (could be extended with actual DB operations)
-//        User newUser = new User(id, username, password, email, phone);
-//        System.out.println("Registered user: " + newUser.getUsername());
-//        errorMessageLabel.setText("Registration successful!");
     }
+    // Clear input fields after successful registration
+    private void clearFields() {
+        usernameField.clear();
+        passwordField.clear();
+        emailField.clear();
+        phoneField.clear();
+    }
+
+    private void goToUserHomePage(){
+        try {
+            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/UserHomePage.fxml"));
+
+            // Get the current stage (the window) and set the scene to the register page
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
+            stage.setTitle("UserHomePage");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

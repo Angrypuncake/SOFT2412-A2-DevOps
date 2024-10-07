@@ -55,4 +55,9 @@ public class User {
     public String getUserType(){
         return this.userType.getDisplayName();
     }
+
+    // Check if the entered username and password match this user
+    public boolean authenticate(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
+    }
 }
