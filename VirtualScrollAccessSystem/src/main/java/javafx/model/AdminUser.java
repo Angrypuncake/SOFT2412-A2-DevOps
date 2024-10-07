@@ -16,9 +16,15 @@ public class AdminUser extends User {
     // Admin privileges: javafx.model.view users, delete users, etc.
     public void viewUsers(List<User> users) {
         // Logic to display users
+        for (User user : users) {
+            System.out.println(user.getId());
+            System.out.println(user.getUsername());
+            System.out.println(user.getEmail());
+            System.out.println(user.getPhoneNumber());
+        }
     }
 
-    public void deleteUser(User user) {
-        // Logic to delete user
+    public void deleteUser(List<User> users, User user) {
+        users.remove(user);
     }
 }
