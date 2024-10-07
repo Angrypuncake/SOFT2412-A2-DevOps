@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="javafx.controller.LoginController" alignment="CENTER" spacing="10" prefHeight="400" prefWidth="300">
+
+    <!-- Existing login controls (username, password, etc.) -->
+    <Label text="Login" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <TextField fx:id="usernameField" promptText="Username" maxWidth="200"/>
+    <PasswordField fx:id="passwordField" promptText="Password" maxWidth="200"/>
+
+    <Button text="Login" onAction="#handleLogin" maxWidth="200"/>
+
+    <Button text="Guest Login" onAction="#handleGuestLogin" maxWidth="200"/>
+
+    <!-- Register Button to switch to the register page -->
+    <Button text="Register" onAction="#switchToRegister" maxWidth="200"/>
+
+    <Label fx:id="errorMessageLabel" text="" style="-fx-text-fill: red;"/>
+
+</VBox>
