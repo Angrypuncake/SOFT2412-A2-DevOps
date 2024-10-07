@@ -1,5 +1,6 @@
 package javafx.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -99,4 +100,16 @@ public class RegisterController {
     }
 
 
+    public void handleBack(ActionEvent actionEvent) {
+        try {
+            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/login.fxml"));
+
+            // Get the current stage (the window) and set the scene to the register page
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
+            stage.setTitle("Login");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

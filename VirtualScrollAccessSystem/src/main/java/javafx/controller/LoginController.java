@@ -49,11 +49,12 @@ public class LoginController {
                     if (resultSet.next()) {
                         // Retrieve the stored hashed password
                         String storedHashedPassword = resultSet.getString("password");
+                        // Hash the password
+
 
                         // Verify the password (hash the input password and compare)
                         if (verifyPassword(password, storedHashedPassword)) {
                             errorMessageLabel.setText("Login successful!");
-                            System.out.println("Login successful for user: " + username);
 
                             // Retrieve user details from the database for the session
                             String userId = resultSet.getString("id");
@@ -91,7 +92,7 @@ public class LoginController {
         if(role.equals("Admin")){
             handleAdminLogin();
         }
-        if(role.equals("User")){
+        if(role.equals("Normal")){
             handleNormalLogin();
         }
     }
@@ -153,13 +154,4 @@ public class LoginController {
         }
     }
 
-
-    public void handleRememberMe(ActionEvent actionEvent) {
-    }
-
-    public void handleSignIn(ActionEvent actionEvent) {
-    }
-
-    public void handleForgotPassword(ActionEvent actionEvent) {
-    }
 }

@@ -14,6 +14,8 @@
 
     <Button text="Login" onAction="#handleLogin" maxWidth="200"/>
 
+
+
     <Button text="Guest Login" onAction="#handleGuestLogin" maxWidth="200"/>
 
     <!-- Register Button to switch to the register page -->
