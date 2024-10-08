@@ -42,32 +42,27 @@ public class HomePageController {
     }
 
 
-    // Guest-specific methods
-    @FXML
-    public void handleBrowseContent() {
-        System.out.println("Browsing content as guest...");
-        // Logic for browsing as a guest
-    }
-
-    @FXML
-    public void handleLogin() {
-        System.out.println("Switching to login/register...");
-        // Logic for switching to the login page
-    }
 
     // User-specific methods
     @FXML
-    public void handleProfile() {
-        System.out.println("Viewing profile...");
-        // Logic for viewing profile
-    }
+    public void handleProfile(ActionEvent actionEvent) {
+        try {
+            // Step 2: Load the login page FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/updateProfile.fxml"));
+            Parent loginRoot = loader.load();
 
-    @FXML
-    public void handleUserFeatures() {
-        System.out.println("Accessing user features...");
-        // Logic for user-specific features
-    }
+            Stage stage = MainApp.getPrimaryStage();
+            Scene loginScene = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
+            // Step 4: Set the login scene and show it
+            stage.setScene(loginScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 
     // Helper method to show a simple alert
@@ -96,5 +91,8 @@ public class HomePageController {
     public void handleSystemSettings() {
         System.out.println("Accessing system settings...");
         // Logic for accessing system settings
+    }
+
+    public void handleUserManagement(ActionEvent actionEvent) {
     }
 }

@@ -10,7 +10,14 @@
 
     <!-- User-specific features -->
     <Button text="Profile" onAction="#handleProfile" />
-    <Button text="Access User Features" onAction="#handleUserFeatures" />
+    <!-- Scroll Management Button -->
+    <Button mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="150.0" prefWidth="200.0" text="Scroll Management" />
+    <!-- Scroll Finder Button -->
+    <Button layoutY="150.0" mnemonicParsing="false" onAction="#handleScrollFinder" prefHeight="150.0" prefWidth="200.0" text="Scroll Finder" />
+    <!-- Go back to login page -->
+    <Button layoutY="450.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="150.0" prefWidth="200.0" text="Go to Login Page" />
+    <!-- Profile Button -->
+    <Button layoutY="240.0" mnemonicParsing="false" onAction="#handleProfile" prefHeight="120.0" prefWidth="200.0" text="Profile" />
 
     <!-- Logout button -->
     <Button text="Logout" onAction="#handleLogout" />
