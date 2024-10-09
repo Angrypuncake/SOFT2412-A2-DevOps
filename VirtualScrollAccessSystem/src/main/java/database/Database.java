@@ -6,6 +6,7 @@ import javafx.utils.HashUtils;
 import java.sql.*;
 import java.util.UUID;
 
+// Handles all database operations and initialisation
 
 public class Database {
     private static Connection connection;
