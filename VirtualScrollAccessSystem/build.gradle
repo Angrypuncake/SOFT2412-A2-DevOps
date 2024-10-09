@@ -3,10 +3,13 @@ plugins {
   id 'application'
   id 'org.openjfx.javafxplugin' version '0.0.13'
   id 'org.beryx.jlink' version '2.25.0'
+  id 'jacoco'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
+
+
 
 repositories {
   mavenCentral()
@@ -53,6 +56,11 @@ dependencies {
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+  testImplementation 'org.testfx:testfx-core:4.0.16-alpha'
+  testImplementation 'org.testfx:testfx-junit5:4.0.16-alpha'
+  testImplementation 'org.mockito:mockito-core:3.11.2'
+  testImplementation 'org.mockito:mockito-inline:3.11.2'
 }
 
 test {
@@ -68,4 +76,25 @@ jlink {
 
 jlinkZip {
   group = 'distribution'
+}
+
+jacoco {
+  toolVersion = "0.8.8" // Use the latest stable version or adjust accordingly
+}
+
+test {
+  useJUnitPlatform() // Ensures compatibility with JUnit 5
+  finalizedBy jacocoTestReport // Ensures the test report is generated after tests
+}
+
+jacocoTestReport {
+  dependsOn test // Tests need to run before generating the report
+  reports {
+    xml.required = true // Enable XML report for CI
+    html.required = true // Enable HTML report for local viewing
+  }
+}
+
+tasks.test {
+  finalizedBy jacocoTestReport // Automatically run JaCoCo after tests
 }
