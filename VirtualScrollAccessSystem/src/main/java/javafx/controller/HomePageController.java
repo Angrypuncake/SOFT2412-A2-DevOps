@@ -21,7 +21,7 @@ public class HomePageController {
     // Shared methods across different views
 
     @FXML
-    private void handleLogout(ActionEvent actionEvent) {
+    public void handleLogout(ActionEvent actionEvent) {
         try {
             // Step 1: End the current user session
             UserSession.endSession();
