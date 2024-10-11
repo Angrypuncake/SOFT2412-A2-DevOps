@@ -1,7 +1,7 @@
 package javafx.controller;
 import javafx.model.User1;
 
-
+import javafx.MainApp;
 import database.Database;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,25 +28,30 @@ import java.sql.ResultSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.UUID;
+import javafx.utils.HashUtils;
+
 
 import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
 import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
 
 public class UserManagementController {
-    @FXML
-    private ListView<User1> userListView;
-    @FXML
-    private Label nameTextField;
-    @FXML
-    private Label emailTextField;
-    @FXML
-    private Label phoneTextField;
-    @FXML
-    private Label userIDTextField;
-    @FXML
-    private ImageView wizardImage;
-    @FXML
-    private Button deleteButton;
+    @FXML private ListView<User1> userListView;
+    @FXML private Label nameTextField;
+    @FXML private Label emailTextField;
+    @FXML private Label phoneTextField;
+    @FXML private Label userIDTextField;
+    @FXML private ImageView wizardImage;
+    @FXML private Button deleteButton;
+    @FXML private Label previewID;
+    @FXML private Label previewName;
+    @FXML private Label previewEmail;
+    @FXML private Label previewPhone;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField emailField;
+    @FXML private TextField phoneField;
+    @FXML private Label errorMessage;
 
     private ObservableList<User1> userList;
 
@@ -93,33 +98,138 @@ public class UserManagementController {
         nameTextField.setText(user.getName());
         emailTextField.setText(user.getEmail());
         userIDTextField.setText(user.getEmail());
-        phoneTextField.setText(user.getEmail());
+        phoneTextField.setText(user.getPhone());
 
+        previewEmail.setVisible(true);
+        previewID.setVisible(true);
+        previewName.setVisible(true);
+        previewPhone.setVisible(true);
         deleteButton.setVisible(true);
         wizardImage.setVisible(true);
     }
 
     @FXML
     private void handleDeleteUser() {
-        // LOGIC TO DELETE A USER
+        User1 selectedUser = userListView.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            deleteUser(selectedUser);
+            userList.remove(selectedUser);
+            clearUserDetails();
+        }
 
+    }
+
+    private void deleteUser(User1 user) {
+        String query = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, user.getId());
+            stmt.executeUpdate();
+            System.out.println("User deleted: " + user.getName());
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void handleAddUser() {
-        // LOGIC TO DELETE A USER
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String email = emailField.getText();
+        String phone = phoneField.getText();
+        String id = UUID.randomUUID().toString();
+
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            errorMessage.setText("All fields are required!");
+            return;
+        }
+
+        String hashedPassword = HashUtils.hashPassword(password);
+
+        try (Connection connection = Database.getConnection()) {
+            String insertUser = "INSERT INTO users (id, username, password, email, phone, userType) VALUES (?, ?, ?, ?, ?, ?)";
+
+            try (PreparedStatement statement = connection.prepareStatement(insertUser)) {
+                statement.setString(1, id);
+                statement.setString(2, username);
+                statement.setString(3, hashedPassword);
+                statement.setString(4, email);
+                statement.setString(5, phone);
+                statement.setString(6, "Normal");
+
+                int rowsAffected = statement.executeUpdate();
+                if (rowsAffected > 0) {
+                    errorMessage.setText("User successfully registered!");
+                    User1 newUser = new User1(id, username, email, phone);
+                    userList.add(newUser);
+                    clearFields();
+                } else {
+                    errorMessage.setText("Registration failed!");
+                }
+            }
+        } catch (SQLException e) {
+            errorMessage.setText("Database error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            UserSession.endSession();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/login.fxml"));
+            Parent loginRoot = loader.load();
+
+            Stage stage = MainApp.getPrimaryStage();
+            Scene loginScene = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+
+            stage.setScene(loginScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    private void handleHome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/AdminHomePage.fxml"));
+            Parent loginRoot = loader.load();
+
+            Stage stage = MainApp.getPrimaryStage();
+            Scene adminpage = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+
+            stage.setScene(adminpage);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
 
     private void clearUserDetails() {
         // Clear the text fields and hide the delete button
-        //userIDTextField.clear();
-        //nameTextField.clear();
-        //emailTextField.clear();
-        //phoneTextField.clear();
+        userIDTextField.setText("");
+        nameTextField.setText("");
+        emailTextField.setText("");
+        phoneTextField.setText("");
         deleteButton.setVisible(false);
         wizardImage.setVisible(false);
+    }
+
+    private void clearFields() {
+        usernameField.clear();
+        passwordField.clear();
+        emailField.clear();
+        phoneField.clear();
+        errorMessage.setText("");
     }
 
 }
