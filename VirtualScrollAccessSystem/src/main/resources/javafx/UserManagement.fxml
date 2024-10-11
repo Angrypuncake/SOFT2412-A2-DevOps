@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UserManagementController">
+   <children>
+      <ListView fx:id="userListView" layoutX="54.0" layoutY="449.0" prefHeight="224.0" prefWidth="220.0" />
+      <Button fx:id="handleAddUser" layoutX="378.0" layoutY="635.0" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="35.0" prefWidth="160.0" text="Add New User ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Text layoutX="163.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Label alignment="CENTER" layoutX="132.0" layoutY="15.0" text="User Management" textAlignment="CENTER">
+         <font>
+            <Font name="Arial Black" size="36.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="wizardImage" fitHeight="181.0" fitWidth="212.0" layoutX="30.0" layoutY="141.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Images/wizard.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="nameTextField" layoutX="320.0" layoutY="207.0" prefHeight="29.0" prefWidth="250.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="emailTextField" layoutX="320.0" layoutY="246.0" prefHeight="29.0" prefWidth="250.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="phoneTextField" layoutX="320.0" layoutY="289.0" prefHeight="29.0" prefWidth="250.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="userIDTextField" layoutX="320.0" layoutY="162.0" prefHeight="29.0" prefWidth="250.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="deleteButton" layoutX="360.0" layoutY="339.0" mnemonicParsing="false" onAction="#handleDeleteUser" text="Delete User" visible="false" />
+      <Label fx:id="previewID" layoutX="250.0" layoutY="165.0" prefHeight="23.0" prefWidth="60.0" text="User ID:" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="previewName" layoutX="250.0" layoutY="209.0" prefHeight="23.0" prefWidth="60.0" text="Name:" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="previewEmail" layoutX="250.0" layoutY="250.0" prefHeight="23.0" prefWidth="60.0" text="Email:" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="previewPhone" layoutX="250.0" layoutY="293.0" prefHeight="23.0" prefWidth="60.0" text="Phone:" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="77.0" layoutY="402.0" text="Select Users Below!">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="543.0" layoutY="772.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+      <Button layoutX="485.0" layoutY="772.0" mnemonicParsing="false" onAction="#handleHome" prefHeight="26.0" prefWidth="55.0" text="Home" />
+      <TextField fx:id="usernameField" alignment="CENTER" layoutX="378.0" layoutY="464.0" prefHeight="26.0" prefWidth="160.0" promptText="Username" />
+      <PasswordField fx:id="passwordField" alignment="CENTER" layoutX="378.0" layoutY="506.0" prefHeight="26.0" prefWidth="160.0" promptText="Password" />
+      <TextField fx:id="emailField" alignment="CENTER" layoutX="378.0" layoutY="547.0" prefHeight="26.0" prefWidth="160.0" promptText="Email" />
+      <TextField fx:id="phoneField" alignment="CENTER" layoutX="378.0" layoutY="593.0" prefHeight="26.0" prefWidth="160.0" promptText="Phone" />
+      <Label fx:id="errorMessage" layoutX="378.0" layoutY="687.0" prefHeight="17.0" prefWidth="160.0" />
+   </children>
+</AnchorPane>
