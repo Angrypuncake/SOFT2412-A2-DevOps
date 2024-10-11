@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="400" prefWidth="300" spacing="10" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.RegisterController">
+<VBox alignment="CENTER" prefHeight="800.0" prefWidth="600.0" spacing="10" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.RegisterController">
 
     <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Register" />
 

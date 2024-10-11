@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.AdminController">
    <children>
       <Button mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="81.0" prefWidth="155.0" text="Scroll Management">
          <font>
@@ -21,7 +20,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutY="162.0" mnemonicParsing="false" onAction="#handleUserManagement" prefHeight="81.0" prefWidth="155.0" text="User Management">
+      <Button fx:id="handleUserManagement" layoutY="162.0" mnemonicParsing="false" onAction="#handleUserManagement" prefHeight="81.0" prefWidth="155.0" text="User Management">
          <font>
             <Font size="15.0" />
          </font>

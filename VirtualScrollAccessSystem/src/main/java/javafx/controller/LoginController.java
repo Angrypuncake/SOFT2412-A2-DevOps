@@ -132,7 +132,7 @@ public class LoginController {
         try {
             Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/UserHomePage.fxml"));
 
-            // Get the current stage (the window) and set the scene to the register page
+            // Get the current stage (the window) and set the scene to the Home page
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
             stage.setTitle("UserHomePage");
@@ -145,9 +145,9 @@ public class LoginController {
         try {
             Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/AdminHomePage.fxml"));
 
-            // Get the current stage (the window) and set the scene to the register page
+            // Get the current stage (the window) and set the scene to the Admin page
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
+            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, 400));
             stage.setTitle("AdminHomePage");
         } catch (IOException e) {
             throw new RuntimeException(e);
