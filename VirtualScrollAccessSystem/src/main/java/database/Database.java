@@ -232,4 +232,25 @@ public class Database {
             throw new SQLException("Error while deleting scroll: " + e.getMessage(), e);
         }
     }
+
+    public static void updateScrollName(String scrollId, String newName) throws SQLException {
+        String updateSQL = "UPDATE scrolls SET name = ? WHERE id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
+
+            preparedStatement.setString(1, newName);
+            preparedStatement.setString(2, scrollId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Scroll updated successfully.");
+            } else {
+                System.out.println("No scroll found with the given ID.");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error while updating scroll: " + e.getMessage(), e);
+        }
+    }
+
 }

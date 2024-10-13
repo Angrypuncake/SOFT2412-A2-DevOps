@@ -1,15 +1,15 @@
 package javafx.controller;
 
 import database.Database;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.model.Scroll;
 import javafx.model.UserSession;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 
 import java.io.BufferedReader;
@@ -19,12 +19,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static javafx.utils.SceneUtil.switchScene;
 
 public class ScrollFinderController {
 
+    public TextField nameSearchField;
+    public TextField uploaderSearchField;
+    public DatePicker fromDatePicker;
+    public DatePicker toDatePicker;
     @FXML
     private TableView<Scroll> scrollTable;
 
@@ -42,6 +47,9 @@ public class ScrollFinderController {
 
     @FXML
     private TextArea filePreview;  // TextArea for file preview
+
+    private ObservableList<Scroll> allScrolls = FXCollections.observableArrayList();  // List to hold all scrolls
+
 
     // Initialize method to set up the table columns
     @FXML
@@ -61,13 +69,39 @@ public class ScrollFinderController {
 
         // Load all scrolls upon initialization
         loadAllScrolls();
+
+        nameSearchField.setOnKeyReleased(this::filterScrolls);
+        uploaderSearchField.setOnKeyReleased(this::filterScrolls);
+    }
+
+    private void filterScrolls(KeyEvent keyEvent) {
+        String nameSearch = nameSearchField.getText().toLowerCase();
+        String uploaderSearch = uploaderSearchField.getText().toLowerCase();
+        LocalDate fromDate = fromDatePicker.getValue();
+        LocalDate toDate = toDatePicker.getValue();
+
+        ObservableList<Scroll> filteredScrolls = FXCollections.observableArrayList();
+
+        for (Scroll scroll : allScrolls) {
+            boolean matchesName = scroll.getName().toLowerCase().startsWith(nameSearch);
+            boolean matchesUploader = scroll.getUploaderUsername().toLowerCase().contains(uploaderSearch);
+            boolean matchesDate = (fromDate == null || !scroll.getUploadDate().isBefore(fromDate.atStartOfDay())) &&
+                    (toDate == null || !scroll.getUploadDate().isAfter(toDate.atTime(23, 59, 59)));
+
+            if (matchesName && matchesUploader && matchesDate) {
+                filteredScrolls.add(scroll);
+            }
+        }
+
+        scrollTable.setItems(filteredScrolls);
     }
 
     // Method to load all known scrolls from the database
     public void loadAllScrolls() {
         try {
             List<Scroll> scrolls = Database.getAllScrolls();  // Fetch all scrolls from the database
-            scrollTable.getItems().setAll(scrolls);  // Display all scrolls in the TableView
+            allScrolls.setAll(scrolls);  // Store all scrolls in the list
+            scrollTable.setItems(allScrolls);  // Display all scrolls in the TableView
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", "Error loading all scrolls: " + e.getMessage());
         }
@@ -169,5 +203,8 @@ public class ScrollFinderController {
             filePreview.setText("Unable to load the file preview.");
         }
     }
+
+
+
 
 }

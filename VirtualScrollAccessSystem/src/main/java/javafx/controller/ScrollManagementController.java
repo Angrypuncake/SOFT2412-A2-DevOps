@@ -2,14 +2,14 @@ package javafx.controller;
 
 import database.Database;
 import javafx.MainApp;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.model.Scroll;
 import javafx.model.UserSession;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -42,6 +42,16 @@ public class ScrollManagementController {
 
     @FXML
     public TableColumn<Scroll, String> uploadDate;
+
+    @FXML
+    private TextField scrollNameField;  // TextField for editing scroll name
+
+    private ObservableList<Scroll> allScrolls = FXCollections.observableArrayList();  // List to hold all scrolls
+
+    @FXML
+    private TextField searchField;  // Search bar for filtering scroll names
+
+
 
     private File selectedFile;
 
@@ -111,6 +121,7 @@ public class ScrollManagementController {
 
             List<Scroll> scrolls = Database.getScrollsByUploaderId(userId);  // Get scrolls for current user
             scrollTable.getItems().setAll(scrolls);  // Display the scrolls in the TableView
+            allScrolls.setAll(scrolls);
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", "Error loading your scrolls: " + e.getMessage());
         }
@@ -121,12 +132,23 @@ public class ScrollManagementController {
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        uploaderColumn.setCellValueFactory(new PropertyValueFactory<>("uploaderUsername"));  // Display uploader username
+        uploaderColumn.setCellValueFactory(new PropertyValueFactory<>("uploaderUsername"));
         uploadDate.setCellValueFactory(new PropertyValueFactory<>("uploadDate"));
+
+        // Populate the form when a scroll is selected
+        scrollTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                scrollNameField.setText(newValue.getName());
+            }
+        });
 
         // Load only the current user's scrolls
         loadScrollsForCurrentUser();
+
+        // Add a listener to filter scrolls as the user types in the search field
+        searchField.setOnKeyReleased(this::filterScrolls);
     }
+
 
     // Utility method to show an alert dialog
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -177,5 +199,62 @@ public class ScrollManagementController {
             }
         }
     }
+
+
+    @FXML
+    public void handleUpdateScroll() {
+        Scroll selectedScroll = scrollTable.getSelectionModel().getSelectedItem();
+        if (selectedScroll == null) {
+            showAlert(Alert.AlertType.ERROR, "No Selection", "Please select a scroll to update.");
+            return;
+        }
+
+        // Get the updated name from the TextField
+        String updatedName = scrollNameField.getText();
+        if (updatedName == null || updatedName.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid scroll name.");
+            return;
+        }
+
+        // Confirm update
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirm Update");
+        confirmationAlert.setHeaderText("Are you sure you want to update this scroll?");
+        confirmationAlert.setContentText("The name will be updated to: " + updatedName);
+
+        if (confirmationAlert.showAndWait().get() == ButtonType.OK) {
+            try {
+                // Update the scroll name in the database
+                Database.updateScrollName(selectedScroll.getId(), updatedName);
+                loadScrollsForCurrentUser();  // Refresh the TableView after the update
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Scroll updated successfully.");
+            } catch (SQLException e) {
+                showAlert(Alert.AlertType.ERROR, "Database Error", "Error updating scroll: " + e.getMessage());
+            }
+        }
+    }
+
+    // Method to filter scrolls by name based on user input
+    private void filterScrolls(KeyEvent event) {
+        String searchTerm = searchField.getText().toLowerCase();  // Convert search term to lowercase
+        // If the search term is empty, display all scrolls
+        if (searchTerm.isEmpty()) {
+            scrollTable.setItems(allScrolls);  // Display all scrolls
+            return;
+        }
+
+        // Filter scrolls whose names start with the search term (case-insensitive)
+        ObservableList<Scroll> filteredScrolls = FXCollections.observableArrayList();
+        for (Scroll scroll : allScrolls) {
+            if (scroll.getName().toLowerCase().startsWith(searchTerm)) {
+                filteredScrolls.add(scroll);
+            }
+        }
+        // Update the TableView with the filtered results
+        scrollTable.setItems(filteredScrolls);
+    }
+
+
+
 
 }
