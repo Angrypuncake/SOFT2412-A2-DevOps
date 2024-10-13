@@ -93,7 +93,7 @@ public class ScrollManagementController {
         long fileSize = selectedFile.length();  // File size in bytes
 
         // Define where to save the file
-        File saveDirectory = new File("scrolls/");
+        File saveDirectory = new File("src/main/resources/scrolls/");
         if (!saveDirectory.exists()) {
             saveDirectory.mkdir();  // Create directory if it doesn't exist
         }
