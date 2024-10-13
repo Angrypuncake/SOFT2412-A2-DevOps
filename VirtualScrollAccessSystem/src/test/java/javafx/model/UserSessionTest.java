@@ -1,78 +1,93 @@
 package javafx.model;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserSessionTest {
+class UserSessionTest {
 
     @BeforeEach
-    public void clearSession() {
-        // Ensure the session is cleared before each test
-        UserSession.endSession();
+    void resetSession() {
+        UserSession.endSession();  // Reset session to ensure clean state before each test
     }
 
     @Test
-    public void testStartSession() {
-        // Start a new session
-        UserSession.startSession("1", "testUser", "User");
-
-        // Retrieve the current session and verify the values
+    void testSingletonInstanceIsCreated() {
+        // Ensure that a session starts as Guest if no session is active
         UserSession session = UserSession.getInstance();
-        assertEquals("1", session.getUserId(), "User ID should be '1'");
-        assertEquals("testUser", session.getUsername(), "Username should be 'testUser'");
-        assertEquals("User", session.getRole(), "Role should be 'User'");
+        assertNotNull(session);
+        assertEquals("Guest", session.getUsername());
+        assertEquals("Guest", session.getRole());
     }
 
     @Test
-    public void testSingletonBehavior() {
-        // Start a session
+    void testStartSessionWithValidUser() {
+        // Start a session with specific user details
         UserSession.startSession("1", "testUser", "User");
-
-        // Attempt to start another session with different values
-        UserSession.startSession("2", "newUser", "Admin");
-
-        // Ensure the initial session is still in place
         UserSession session = UserSession.getInstance();
-        assertEquals("1", session.getUserId(), "User ID should remain '1'");
-        assertEquals("testUser", session.getUsername(), "Username should remain 'testUser'");
-        assertEquals("User", session.getRole(), "Role should remain 'User'");
+
+        // Validate that the session details match
+        assertEquals("1", session.getUserId());
+        assertEquals("testUser", session.getUsername());
+        assertEquals("User", session.getRole());
     }
 
     @Test
-    public void testEndSession() {
-        // Start and then end the session
+    void testEndSessionResetsToGuest() {
+        // Start a session with a valid user
         UserSession.startSession("1", "testUser", "User");
-        UserSession.endSession();
 
-        // Verify that trying to get the session throws an exception
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            UserSession.getInstance();
-        });
-        assertEquals("No user is logged in.", exception.getMessage());
+        // End the session and check if it's reset to "Guest"
+        UserSession.endSession();
+        UserSession session = UserSession.getInstance();
+
+        // Validate the session is now for a guest user
+        assertNull(session.getUserId());
+        assertEquals("Guest", session.getUsername());
+        assertEquals("Guest", session.getRole());
+        assertTrue(session.isGuest());
     }
 
     @Test
-    public void testIsAdmin() {
-        // Start an admin session and verify the isAdmin method
+    void testIsAdminWhenRoleIsAdmin() {
+        // Start a session with admin role
         UserSession.startSession("1", "adminUser", "Admin");
-        assertTrue(UserSession.getInstance().isAdmin(), "User should be an admin");
+        UserSession session = UserSession.getInstance();
 
-        // Start a non-admin session and verify
-        UserSession.endSession();
-        UserSession.startSession("2", "testUser", "User");
-        assertFalse(UserSession.getInstance().isAdmin(), "User should not be an admin");
+        // Validate the user is an admin
+        assertTrue(session.isAdmin());
+        assertFalse(session.isUser());
+        assertFalse(session.isGuest());
     }
 
     @Test
-    public void testIsGuest() {
-        // Start a guest session and verify the isGuest method
-        UserSession.startSession("3", "guestUser", "Guest");
-        assertTrue(UserSession.getInstance().isGuest(), "User should be a guest");
+    void testIsUserWhenRoleIsUser() {
+        // Start a session with user role
+        UserSession.startSession("1", "regularUser", "User");
+        UserSession session = UserSession.getInstance();
 
-        // Start a non-guest session and verify
-        UserSession.endSession();
-        UserSession.startSession("4", "testUser", "User");
-        assertFalse(UserSession.getInstance().isGuest(), "User should not be a guest");
+        // Validate the user is a regular user
+        assertTrue(session.isUser());
+        assertFalse(session.isAdmin());
+        assertFalse(session.isGuest());
+    }
+
+    @Test
+    void testDefaultRoleIsGuestWhenRoleIsNullOrEmpty() {
+        // Start a session without specifying the role (null)
+        UserSession.startSession("1", "testUser", null);
+        UserSession session = UserSession.getInstance();
+
+        // Validate the session defaults to "Guest" role
+        assertEquals("Guest", session.getRole());
+        assertTrue(session.isGuest());
+
+        // Start a session with an empty role
+        UserSession.startSession("2", "emptyRoleUser", "");
+        session = UserSession.getInstance();
+
+        // Validate the session defaults to "Guest" role
+        assertEquals("Guest", session.getRole());
+        assertTrue(session.isGuest());
     }
 }

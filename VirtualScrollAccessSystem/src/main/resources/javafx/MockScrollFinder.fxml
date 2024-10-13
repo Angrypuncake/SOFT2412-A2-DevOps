@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.ScrollFinderController" spacing="10" alignment="TOP_CENTER">
+
+    <!-- Title -->
+    <Label text="View All Scrolls" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <!-- TableView for displaying all scrolls -->
+    <TableView fx:id="scrollTable" prefHeight="200" prefWidth="500">
+        <columns>
+            <TableColumn fx:id="idColumn" text="Scroll ID" prefWidth="150"/>
+            <TableColumn fx:id="nameColumn" text="Scroll Name" prefWidth="200"/>
+            <TableColumn fx:id="uploaderColumn" text="Uploader Username" prefWidth="150"/>
+            <TableColumn fx:id="uploadDate" text="Date Uploaded" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Scroll Management Button -->
+    <Button text="Scroll Management" onAction="#handleScrollManagement" prefWidth="200" />
+
+    <!-- Download button -->
+    <Button text="Download Selected Scroll" onAction="#handleDownload" prefWidth="200" />
+
+    <VBox spacing="10">
+        <!-- Label as the title -->
+        <Label text="Preview" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+
+        <!-- TextArea to display the content of the selected file -->
+        <TextArea fx:id="filePreview" editable="false" prefHeight="300" prefWidth="500" wrapText="true" />
+    </VBox>
+
+    <!-- Back Home Button -->
+    <Button text="BackHome" onAction="#BackHome" style="-fx-background-color: red; -fx-text-fill: white;" />
+
+</VBox>

@@ -1,39 +1,21 @@
 package javafx.controller;
-import javafx.model.User1;
 
-import javafx.MainApp;
 import database.Database;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
-import javafx.utils.HashUtils;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import javafx.model.UserSession;
-
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.UUID;
+import javafx.fxml.FXML;
+import javafx.model.User1;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.utils.HashUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
 
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
+import static javafx.utils.SceneUtil.switchScene;
 
 public class UserManagementController {
     @FXML private ListView<User1> userListView;
@@ -178,38 +160,12 @@ public class UserManagementController {
 
     @FXML
     private void handleLogout() {
-        try {
-            UserSession.endSession();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/login.fxml"));
-            Parent loginRoot = loader.load();
-
-            Stage stage = MainApp.getPrimaryStage();
-            Scene loginScene = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            stage.setScene(loginScene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        switchScene("login.fxml");
     }
 
     @FXML
     private void handleHome() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/AdminHomePage.fxml"));
-            Parent loginRoot = loader.load();
-
-            Stage stage = MainApp.getPrimaryStage();
-            Scene adminpage = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            stage.setScene(adminpage);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        switchScene("AdminHomePage.fxml");
 
     }
 

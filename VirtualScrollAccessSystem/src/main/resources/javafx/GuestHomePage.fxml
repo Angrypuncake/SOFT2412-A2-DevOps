@@ -7,9 +7,6 @@
 
     <!-- Guest-specific content -->
     <Label text="Welcome, Guest!" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-
-    <!-- Scroll Management Button -->
-    <Button mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="150.0" prefWidth="200.0" text="Scroll Management" />
     <!-- Scroll Finder Button -->
     <Button layoutY="150.0" mnemonicParsing="false" onAction="#handleScrollFinder" prefHeight="150.0" prefWidth="200.0" text="Scroll Finder" />
     <!-- Go back to login page -->

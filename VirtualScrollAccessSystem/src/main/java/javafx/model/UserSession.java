@@ -4,35 +4,33 @@ public class UserSession {
 
     private static UserSession instance;
 
-    private String userId;
-    private String username;
-    private String role;  // e.g., "Guest", "User", "Admin"
+    private final String userId;
+    private final String username;
+    private final String role;  // e.g., "Guest", "User", "Admin"
 
     // Private constructor to enforce Singleton pattern
     private UserSession(String userId, String username, String role) {
         this.userId = userId;
         this.username = username;
-        this.role = role;
+        this.role = (role == null || role.isEmpty()) ? "Guest" : role;  // Default to "Guest" if no role provided
     }
 
-    // Static method to initialize a session
+    // Static method to start a session
     public static void startSession(String userId, String username, String role) {
-        if (instance == null) {
-            instance = new UserSession(userId, username, role);
-        }
+        instance = new UserSession(userId, username, role);
     }
 
     // Static method to get the current session
     public static UserSession getInstance() {
         if (instance == null) {
-            throw new IllegalStateException("No user is logged in.");
+            instance = new UserSession(null, "Guest", "Guest");  // Default to Guest session
         }
         return instance;
     }
 
-    // Static method to clear the session (logout)
+    // Static method to reset the session to "Guest" (end the user session)
     public static void endSession() {
-        instance = null;
+        instance = new UserSession(null, "Guest", "Guest");  // Reset to guest session
     }
 
     // Getters for user information
@@ -56,5 +54,10 @@ public class UserSession {
     // Example: Check if the user is logged in as a guest
     public boolean isGuest() {
         return "Guest".equals(role);
+    }
+
+    // Example: Check if the user is a regular user
+    public boolean isUser() {
+        return "User".equals(role);
     }
 }

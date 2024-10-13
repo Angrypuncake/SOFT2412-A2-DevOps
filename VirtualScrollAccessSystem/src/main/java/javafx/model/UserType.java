@@ -5,7 +5,7 @@ public enum UserType {
     NORMAL("Normal"),
     ADMIN("Admin");
 
-    private String displayName;
+    private final String displayName;
 
     UserType(String displayName) {
         this.displayName = displayName;

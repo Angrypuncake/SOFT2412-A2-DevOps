@@ -1,20 +1,11 @@
 package javafx.controller;
 
-import javafx.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import javafx.model.UserSession;
+import javafx.scene.control.Alert;
 
-import java.io.IOException;
-
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
+import static javafx.utils.SceneUtil.switchScene;
 
 public class HomePageController {
 
@@ -22,46 +13,14 @@ public class HomePageController {
 
     @FXML
     public void handleLogout(ActionEvent actionEvent) {
-        try {
-            // Step 1: End the current user session
-            UserSession.endSession();
-
-            // Step 2: Load the login page FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/login.fxml"));
-            Parent loginRoot = loader.load();
-
-            Stage stage = MainApp.getPrimaryStage();
-            Scene loginScene = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            // Step 4: Set the login scene and show it
-            stage.setScene(loginScene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        UserSession.endSession();
+        switchScene("login.fxml");
     }
-
-
 
     // User-specific methods
     @FXML
     public void handleProfile(ActionEvent actionEvent) {
-        try {
-            // Step 2: Load the login page FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/updateProfile.fxml"));
-            Parent loginRoot = loader.load();
-
-            Stage stage = MainApp.getPrimaryStage();
-            Scene loginScene = new Scene(loginRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            // Step 4: Set the login scene and show it
-            stage.setScene(loginScene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        switchScene("updateProfile.fxml");
     }
 
 
@@ -75,24 +34,26 @@ public class HomePageController {
     }
 
     public void handleScrollManagement(ActionEvent actionEvent) {
+        // See if the user is a user or admin
+        UserSession userSession = UserSession.getInstance();
+        if(userSession.isGuest()){
+            switchScene("GuestRegisterPrompt.fxml");
+        }
+        else{
+            switchScene("MockScrollManagement.fxml");
+        }
     }
 
     public void handleScrollFinder(ActionEvent actionEvent) {
+        switchScene("MockScrollFinder.fxml");
     }
 
-    // Admin-specific methods
-    @FXML
-    public void handleManageUsers() {
-        System.out.println("Managing users as admin...");
-        // Logic for managing users
+
+    public void handleGuestRegister(ActionEvent actionEvent) {
+        switchScene("register.fxml");
     }
 
-    @FXML
-    public void handleSystemSettings() {
-        System.out.println("Accessing system settings...");
-        // Logic for accessing system settings
-    }
-
-    public void handleUserManagement(ActionEvent actionEvent) {
+    public void handleGuestGoBack(ActionEvent actionEvent) {
+        switchScene("GuestHomePage.fxml");
     }
 }
