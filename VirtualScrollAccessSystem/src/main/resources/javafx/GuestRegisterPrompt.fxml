@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.HomePageController" spacing="20" alignment="CENTER">
+
+    <!-- Title / Prompt Text -->
+    <Text text="Welcome! Please Register or Go Back" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <!-- Register Button -->
+    <Button text="Register" onAction="#handleGuestRegister" prefWidth="200" />
+
+    <!-- Back to Home Button -->
+    <Button text="Go Back to Home" onAction="#handleGuestGoBack" prefWidth="200" />
+
+</VBox>

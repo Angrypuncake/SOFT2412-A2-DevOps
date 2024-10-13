@@ -1,28 +1,20 @@
 package javafx.controller;
 
+import database.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.model.User;
-import database.Database;
+import javafx.utils.HashUtils;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import javafx.stage.Stage;
-import javafx.utils.HashUtils;
-
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
+import static javafx.utils.SceneUtil.switchScene;
 
 public class RegisterController {
 
@@ -118,29 +110,11 @@ public class RegisterController {
     }
 
     private void goToUserHomePage(){
-        try {
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/UserHomePage.fxml"));
-
-            // Get the current stage (the window) and set the scene to the register page
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-            stage.setTitle("UserHomePage");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        switchScene("UserHomePage.fxml");
     }
 
 
     public void handleBack(ActionEvent actionEvent) {
-        try {
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/login.fxml"));
-
-            // Get the current stage (the window) and set the scene to the register page
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-            stage.setTitle("Login");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        switchScene("login.fxml");
     }
 }

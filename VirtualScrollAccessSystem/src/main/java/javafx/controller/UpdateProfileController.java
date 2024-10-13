@@ -2,9 +2,7 @@ package javafx.controller;
 
 import database.Database;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.model.UserSession;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,10 +13,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javafx.model.UserSession;
 
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
+import static javafx.utils.SceneUtil.switchScene;
 
 public class UpdateProfileController {
 
@@ -114,32 +110,12 @@ public class UpdateProfileController {
 
         String currentRole = UserSession.getInstance().getRole();
 
-//        System.out.println("trying to cancel!");
-//
-//        System.out.println("Current role is " + currentRole);
-
         if (currentRole.equals("Admin")) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/AdminHomePage.fxml"));
-            Parent homeRoot = loader.load();
-            Scene homepage = new Scene(homeRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            // Step 4: Set the login scene and show it
-            stage.setScene(homepage);
-            stage.show();
-
+            switchScene("AdminHomePage.fxml");
         }
         else if (currentRole.equals("Normal")) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/javafx/UserHomePage.fxml"));
-            Parent homeRoot = loader.load();
-            Scene homepage = new Scene(homeRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            // Step 4: Set the login scene and show it
-            stage.setScene(homepage);
-            stage.show();
+            switchScene("UserHomePage.fxml");
         }
-
-
-
     }
 
     // Helper method to show alert dialogs

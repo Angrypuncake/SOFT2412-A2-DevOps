@@ -1,26 +1,20 @@
 package javafx.controller;
 
+import database.Database;
 import javafx.event.ActionEvent;
-import javafx.utils.HashUtils;
-
 import javafx.fxml.FXML;
+import javafx.model.UserSession;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.utils.HashUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.Database;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.model.UserSession;
-import javafx.stage.Stage;
-import java.io.IOException;
 
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
+import static javafx.utils.SceneUtil.switchScene;
 
 public class LoginController {
 
@@ -63,7 +57,7 @@ public class LoginController {
                             // Start the user session with the retrieved data
                             UserSession.startSession(userId, username, role);
 
-                            System.out.println("User session started for: " + username + " with role: " + role);
+                            System.out.println("User session started for: " + username + " with role: " + role + "with id" + userId);
 
                             // Proceed to load the next screen (e.g., UserHomePage or AdminHomePage)
                             loadHomePageBasedOnRole(role);
@@ -99,59 +93,20 @@ public class LoginController {
 
     @FXML
     public void switchToRegister() {
-        try {
-            // Load the Register.fxml file
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/register.fxml"));
-
-            // Get the current stage (the window) and set the scene to the register page
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-            stage.setTitle("Register");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        switchScene("register.fxml");
     }
 
     public void handleGuestLogin(ActionEvent actionEvent) {
         UserSession.startSession("Guest", "Guest", "Guest");
-
-        try {
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/GuestHomePage.fxml"));
-
-            // Get the current stage (the window) and set the scene to the register page
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-            stage.setTitle("GuestHomePage");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        switchScene("GuestHomePage.fxml");
     }
 
     private void handleNormalLogin(){
-        try {
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/UserHomePage.fxml"));
-
-            // Get the current stage (the window) and set the scene to the Home page
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-            stage.setTitle("UserHomePage");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        switchScene("UserHomePage.fxml");
     }
 
     private void handleAdminLogin(){
-        try {
-            Parent registerRoot = FXMLLoader.load(getClass().getResource("/javafx/AdminHomePage.fxml"));
-
-            // Get the current stage (the window) and set the scene to the Admin page
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(registerRoot, DEFAULT_WINDOW_WIDTH, 400));
-            stage.setTitle("AdminHomePage");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        switchScene("AdminHomePage.fxml");
     }
 
 }

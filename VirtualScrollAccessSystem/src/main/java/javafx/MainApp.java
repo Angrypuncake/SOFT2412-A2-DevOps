@@ -6,10 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_HEIGHT;
-import static javafx.utils.AppConstants.DEFAULT_WINDOW_WIDTH;
 
 import database.Database;
+
+import static javafx.utils.SceneUtil.DEFAULT_WINDOW_HEIGHT;
+import static javafx.utils.SceneUtil.DEFAULT_WINDOW_WIDTH;
 
 public class MainApp extends Application {
 

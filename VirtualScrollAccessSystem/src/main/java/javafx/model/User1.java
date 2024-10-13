@@ -1,10 +1,10 @@
 package javafx.model;
 
 public class User1 {
-    private String id;
-    private String name;
-    private String email;
-    private String phone;
+    private final String id;
+    private final String name;
+    private final String email;
+    private final String phone;
 
     public User1(String id, String name, String email, String phone) {
         this.id = id;
