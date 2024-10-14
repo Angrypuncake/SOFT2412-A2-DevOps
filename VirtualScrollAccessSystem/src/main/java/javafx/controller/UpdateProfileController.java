@@ -12,6 +12,7 @@ import javafx.utils.HashUtils;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static javafx.utils.SceneUtil.switchScene;
@@ -27,6 +28,39 @@ public class UpdateProfileController {
     @FXML
     private TextField phoneField;
 
+    @FXML
+    public void initialize() {
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        UserSession session = UserSession.getInstance();
+        String userId = session.getUserId();
+
+        String query = "SELECT username, email, phone FROM users WHERE id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String username = resultSet.getString("username");
+                    String email = resultSet.getString("email");
+                    String phone = resultSet.getString("phone");
+
+                    usernameField.setText(username);
+                    emailField.setText(email);
+                    phoneField.setText(phone);
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Error", "An error occurred when loading your data");
+        }
+    }
+
     // Handle the update button click
     @FXML
     private void handleUpdateProfile() {
@@ -38,6 +72,38 @@ public class UpdateProfileController {
         // Get the current user's ID from the session
         UserSession session = UserSession.getInstance();
         String userId = session.getUserId();
+
+        // Validate phone
+        if (!phone.matches("\\d+")) {
+            showAlert("Error","Phone number must contain only digits!");
+            return;
+        }
+
+        // Validate email format
+        if (!email.contains("@") || !email.contains(".")) {
+            showAlert("Error","Please enter a valid email address!");
+            return;
+        }
+
+        // Check if username taken
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE username = ? AND id != ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, username);
+                statement.setString(2, userId);
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        showAlert("Error","Username is already taken, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            showAlert("Error","Database error: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
 
         StringBuilder updateSQL = new StringBuilder("UPDATE users SET ");
         boolean hasUpdates = false;

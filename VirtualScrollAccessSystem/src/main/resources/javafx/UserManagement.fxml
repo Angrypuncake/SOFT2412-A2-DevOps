@@ -52,7 +52,7 @@
          </font>
       </Label>
       <Button fx:id="deleteButton" layoutX="360.0" layoutY="339.0" mnemonicParsing="false" onAction="#handleDeleteUser" text="Delete User" visible="false" />
-      <Label fx:id="previewID" layoutX="250.0" layoutY="165.0" prefHeight="23.0" prefWidth="60.0" text="User ID:" visible="false">
+      <Label fx:id="previewID" layoutX="250.0" layoutY="165.0" prefHeight="23.0" prefWidth="60.0" text="UID:" visible="false">
          <font>
             <Font size="18.0" />
          </font>
