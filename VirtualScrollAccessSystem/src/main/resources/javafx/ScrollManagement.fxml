@@ -11,11 +11,11 @@
 <?import javafx.scene.text.Text?>
 
 <VBox alignment="CENTER" spacing="10" style="-fx-pref-height: 800; -fx-pref-width: 600;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.ScrollManagementController">
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Manage Your Scrolls">
-      <font>
-         <Font size="50.0" />
-      </font>
-   </Text>
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Manage Your Scrolls">
+        <font>
+            <Font size="50.0" />
+        </font>
+    </Text>
 
     <!-- Button to select and upload a file -->
     <Button onAction="#chooseFile" text="Select File to Upload" />
