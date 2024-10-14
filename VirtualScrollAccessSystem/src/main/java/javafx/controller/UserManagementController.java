@@ -128,6 +128,36 @@ public class UserManagementController {
             return;
         }
 
+        // Validate phone
+        if (!phone.matches("\\d+")) {
+            errorMessage.setText("Phone number must contain only digits!");
+            return;
+        }
+
+        // Validate email format
+        if (!email.contains("@") || !email.contains(".")) {
+            errorMessage.setText("Please enter a valid email address!");
+            return;
+        }
+
+        // Check if username taken
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, username);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        errorMessage.setText("Username is already taken, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            errorMessage.setText("Database error: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
         String hashedPassword = HashUtils.hashPassword(password);
 
         try (Connection connection = Database.getConnection()) {
