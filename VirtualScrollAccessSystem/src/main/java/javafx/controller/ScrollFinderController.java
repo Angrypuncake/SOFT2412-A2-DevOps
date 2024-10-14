@@ -138,7 +138,7 @@ public class ScrollFinderController {
             switchScene("GuestRegisterPrompt.fxml");
         }
         else{
-            switchScene("MockScrollManagement.fxml");
+            switchScene("ScrollManagement.fxml");
         }
     }
 
@@ -190,10 +190,10 @@ public class ScrollFinderController {
             if (fileContent.length() == 0) {
                 filePreview.setText("No content available.");
             } else {
-                // Limit the content to 500 characters
+                // Limit the content to 2000 characters
                 String content = fileContent.toString();
-                if (content.length() > 500) {
-                    content = content.substring(0, 500) + "...";  // Truncate and append ellipsis
+                if (content.length() > 2000) {
+                    content = content.substring(0, 2000) + "...";  // Truncate and append ellipsis
                 }
 
                 // Display the file content in the TextArea

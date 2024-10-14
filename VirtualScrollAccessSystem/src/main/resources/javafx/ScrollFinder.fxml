@@ -12,11 +12,11 @@
 <?import javafx.scene.text.Text?>
 
 <VBox alignment="TOP_CENTER" spacing="10" style="-fx-pref-height: 800; -fx-pref-width: 600;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.ScrollFinderController">
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="View All Scrolls">
-      <font>
-         <Font size="34.0" />
-      </font>
-   </Text>
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="View All Scrolls">
+        <font>
+            <Font size="34.0" />
+        </font>
+    </Text>
 
     <!-- TableView for displaying all scrolls -->
     <TextField fx:id="nameSearchField" promptText="Search by name" style="-fx-pref-width: 400;" />

@@ -23,14 +23,14 @@ public class AdminController {
     }
 
     public void handleScrollManagement(){
-        switchScene("MockScrollManagement.fxml");
+        switchScene("ScrollManagement.fxml");
     }
     public void handleProfile(){
         switchScene("updateProfile.fxml");
     }
 
     public void handleScrollFinder(){
-        switchScene("MockScrollFinder.fxml");
+        switchScene("ScrollFinder.fxml");
     }
 
     public void handleScrollStats(){

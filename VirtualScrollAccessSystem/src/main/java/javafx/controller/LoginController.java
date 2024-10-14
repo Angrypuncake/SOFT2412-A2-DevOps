@@ -45,7 +45,6 @@ public class LoginController {
                         String storedHashedPassword = resultSet.getString("password");
                         // Hash the password
 
-
                         // Verify the password (hash the input password and compare)
                         if (verifyPassword(password, storedHashedPassword)) {
                             errorMessageLabel.setText("Login successful!");
@@ -79,6 +78,8 @@ public class LoginController {
     private boolean verifyPassword(String inputPassword, String storedHashedPassword) {
         // Hash the input password and compare it with the stored hashed password
         String hashedInputPassword = HashUtils.hashPassword(inputPassword);
+        System.out.println("comparing password: " + hashedInputPassword);
+        System.out.println("Stored hashed password: " + storedHashedPassword);
         return hashedInputPassword.equals(storedHashedPassword);
     }
 

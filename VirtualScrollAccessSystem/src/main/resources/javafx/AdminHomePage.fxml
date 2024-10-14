@@ -8,45 +8,44 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.AdminController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.AdminController">
    <children>
-      <Button mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="81.0" prefWidth="155.0" text="Scroll Management">
+      <Button layoutX="200.0" layoutY="375.0" mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="50.0" prefWidth="200.0" text="Scroll Management">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutY="81.0" mnemonicParsing="false" onAction="#handleScrollFinder" prefHeight="81.0" prefWidth="155.0" text="Scroll Finder">
+      <Button layoutX="200.0" layoutY="450.0" mnemonicParsing="false" onAction="#handleScrollFinder" prefHeight="50.0" prefWidth="200.0" text="Scroll Finder">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="handleUserManagement" layoutY="162.0" mnemonicParsing="false" onAction="#handleUserManagement" prefHeight="81.0" prefWidth="155.0" text="User Management">
+      <Button fx:id="handleUserManagement" layoutX="201.0" layoutY="525.0" mnemonicParsing="false" onAction="#handleUserManagement" prefHeight="50.0" prefWidth="200.0" text="User Management">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutY="243.0" mnemonicParsing="false" onAction="#handleScrollStats" prefHeight="81.0" prefWidth="155.0" text="Scroll Statistics">
+      <Button layoutX="200.0" layoutY="600.0" mnemonicParsing="false" onAction="#handleScrollStats" prefHeight="50.0" prefWidth="200.0" text="Scroll Statistics">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutY="319.0" mnemonicParsing="false" onAction="#handleProfile" prefHeight="81.0" prefWidth="155.0" text="Profile">
+      <Button layoutX="200.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleProfile" prefHeight="50.0" prefWidth="200.0" text="Profile">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Label alignment="CENTER" layoutX="251.0" layoutY="28.0" prefHeight="81.0" prefWidth="233.0" text="Welcome Wizard" textAlignment="CENTER" textFill="#0026ff">
+      <Label alignment="CENTER" layoutX="184.0" layoutY="50.0" prefHeight="81.0" prefWidth="233.0" text="Welcome Wizard" textAlignment="CENTER" textFill="#0026ff">
          <font>
             <Font name="AppleGothic Regular" size="29.0" />
          </font>
       </Label>
-      <Button layoutX="544.0" layoutY="373.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+      <Button layoutX="532.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
       <ButtonBar layoutX="216.0" layoutY="223.0" prefHeight="40.0" prefWidth="200.0" />
-      <ImageView fitHeight="204.0" fitWidth="200.0" layoutX="386.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="200.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/wizard.png" />
          </image>
       </ImageView>
-      <Label alignment="CENTER" layoutX="209.0" layoutY="139.0" prefHeight="128.0" prefWidth="214.0" text="Text goes here........." textAlignment="CENTER" />
    </children>
 </AnchorPane>
