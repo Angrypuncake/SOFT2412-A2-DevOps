@@ -73,6 +73,12 @@ public class UpdateProfileController {
         UserSession session = UserSession.getInstance();
         String userId = session.getUserId();
 
+        // Validate username format
+        if (!username.matches("^[A-Za-z0-9_]+$")) {
+            showAlert("Error","Username can only contain letters, numbers and underscores.");
+            return;
+        }
+
         // Validate phone
         if (!phone.matches("\\d+")) {
             showAlert("Error","Phone number must contain only digits!");
