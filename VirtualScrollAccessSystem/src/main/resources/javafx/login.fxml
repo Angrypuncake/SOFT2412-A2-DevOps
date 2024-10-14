@@ -41,7 +41,7 @@
       <Button layoutX="215.0" layoutY="591.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #0cfa54;" text="Login" />
       <Button layoutX="215.0" layoutY="627.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #fff203;" text="Register" />
       <Button layoutX="215.0" layoutY="663.0" mnemonicParsing="false" onAction="#handleGuestLogin" prefHeight="26.0" prefWidth="162.0" text="Guest Login" />
-      <TextField fx:id="usernameField" layoutX="215.0" layoutY="521.0" promptText="Username" />
+      <TextField fx:id="usernameField" layoutX="215.0" layoutY="521.0" prefHeight="26.0" prefWidth="162.0" promptText="Username" />
       <ImageView fitHeight="231.0" fitWidth="215.0" layoutX="-13.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/wizard.png" />
