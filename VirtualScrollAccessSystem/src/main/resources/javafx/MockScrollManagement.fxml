@@ -29,7 +29,7 @@
         </columns>
     </TableView>
 
-    <Button text="BackHome" onAction="#BackHome" style="-fx-background-color: red; -fx-text-fill: white;" />
+    <Button text="Back Home" onAction="#BackHome" style="-fx-background-color: red; -fx-text-fill: white;" />
 
     <Button text="Delete Selected Scroll" onAction="#handleDeleteScroll" prefWidth="200" />
 
