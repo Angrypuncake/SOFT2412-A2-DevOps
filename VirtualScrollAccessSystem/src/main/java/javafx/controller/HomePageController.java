@@ -40,12 +40,12 @@ public class HomePageController {
             switchScene("GuestRegisterPrompt.fxml");
         }
         else{
-            switchScene("MockScrollManagement.fxml");
+            switchScene("ScrollManagement.fxml");
         }
     }
 
     public void handleScrollFinder(ActionEvent actionEvent) {
-        switchScene("MockScrollFinder.fxml");
+        switchScene("ScrollFinder.fxml");
     }
 
 

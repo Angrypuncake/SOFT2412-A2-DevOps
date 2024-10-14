@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="javafx.controller.HomePageController" alignment="CENTER" spacing="10" prefWidth="400" prefHeight="300">
+
+    <!-- User-specific content -->
+    <Label text="Welcome, User!" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <!-- User-specific features -->
+    <Button text="Profile" onAction="#handleProfile" />
+    <!-- Scroll Management Button -->
+    <Button mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="150.0" prefWidth="200.0" text="Scroll Management" />
+    <!-- Scroll Finder Button -->
+    <Button layoutY="150.0" mnemonicParsing="false" onAction="#handleScrollFinder" prefHeight="150.0" prefWidth="200.0" text="Scroll Finder" />
+    <!-- Go back to login page -->
+    <Button layoutY="450.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="150.0" prefWidth="200.0" text="Go to Login Page" />
+    <!-- Profile Button -->
+    <Button layoutY="240.0" mnemonicParsing="false" onAction="#handleProfile" prefHeight="120.0" prefWidth="200.0" text="Profile" />
+
+    <!-- Logout button -->
+    <Button text="Logout" onAction="#handleLogout" />
+
+</VBox>

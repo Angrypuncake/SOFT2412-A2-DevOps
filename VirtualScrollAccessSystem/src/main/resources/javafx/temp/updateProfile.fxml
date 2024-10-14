@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="javafx.controller.UpdateProfileController" alignment="CENTER" spacing="10" prefHeight="400" prefWidth="300">
+    <!-- Title -->
+    <Label text="Update Profile" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <!-- Username -->
+    <Label text="Username" />
+    <TextField fx:id="usernameField" promptText="Enter new username" />
+
+    <!-- Email -->
+    <Label text="Email" />
+    <TextField fx:id="emailField" promptText="Enter new email" />
+
+    <!-- Password -->
+    <Label text="Password" />
+    <PasswordField fx:id="passwordField" promptText="Enter new password" />
+
+    <!-- Phone -->
+    <Label text="Phone" />
+    <TextField fx:id="phoneField" promptText="Enter new phone number" />
+
+    <!-- Buttons -->
+    <Button text="Update" onAction="#handleUpdateProfile" style="-fx-background-color: green; -fx-text-fill: white;" />
+    <Button text="Cancel" onAction="#handleCancel" style="-fx-background-color: red; -fx-text-fill: white;" />
+</VBox>
