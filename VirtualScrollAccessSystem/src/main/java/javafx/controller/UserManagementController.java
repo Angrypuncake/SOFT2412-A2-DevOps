@@ -128,6 +128,12 @@ public class UserManagementController {
             return;
         }
 
+        // Validate username format
+        if (!username.matches("^[A-Za-z0-9_]+$")) {
+            errorMessage.setText("Username can only contain letters, numbers and underscores.");
+            return;
+        }
+
         // Validate phone
         if (!phone.matches("\\d+")) {
             errorMessage.setText("Phone number must contain only digits!");

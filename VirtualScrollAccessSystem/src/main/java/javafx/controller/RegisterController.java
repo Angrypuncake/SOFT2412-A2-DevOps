@@ -39,6 +39,12 @@ public class RegisterController {
             return;
         }
 
+        // Validate username format
+        if (!username.matches("^[A-Za-z0-9_]+$")) {
+            errorMessageLabel.setText("Username can only contain letters, numbers and underscores.");
+            return;
+        }
+
         // Validate phone
         if (!phone.matches("\\d+")) {
             errorMessageLabel.setText("Phone number must contain only digits!");
