@@ -79,6 +79,12 @@ public class UpdateProfileController {
             return;
         }
 
+        // Validate password requirements
+        if (password.length() < 8 || !password.chars().anyMatch(Character::isUpperCase)) {
+            showAlert("Error", "Password must be at least 8 characters long and contain at least an uppercase");
+            return;
+        }
+
         // Validate phone
         if (!phone.matches("\\d+")) {
             showAlert("Error","Phone number must contain only digits!");
@@ -88,6 +94,44 @@ public class UpdateProfileController {
         // Validate email format
         if (!email.contains("@") || !email.contains(".")) {
             showAlert("Error","Please enter a valid email address!");
+            return;
+        }
+
+        // Check if email is already used
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE email = ? AND id != ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, email);
+                statement.setString(2, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        showAlert("Error","Email is already used, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            showAlert("Error","Database error: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        // Check if phone number is unique
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE phone = ? AND id != ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, phone);
+                statement.setString(2, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        showAlert("Error","Phone number is already used, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            showAlert("Error","Database error: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
 
