@@ -9,10 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.utils.HashUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 
 import static javafx.utils.SceneUtil.switchScene;
@@ -79,7 +76,7 @@ public class UserManagementController {
 
         nameTextField.setText(user.getName());
         emailTextField.setText(user.getEmail());
-        userIDTextField.setText(user.getEmail());
+        userIDTextField.setText(user.getId());
         phoneTextField.setText(user.getPhone());
 
         previewEmail.setVisible(true);
@@ -121,7 +118,22 @@ public class UserManagementController {
         String password = passwordField.getText();
         String email = emailField.getText();
         String phone = phoneField.getText();
-        String id = UUID.randomUUID().toString();
+        int startId = 800000001;
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 800000001";
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                if (resultSet.next() && resultSet.getInt(1) >= 800000001) {
+                    startId = resultSet.getInt(1) + 1;
+                }
+            }
+        } catch (SQLException e) {
+            errorMessage.setText("Database Error: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        String id = String.valueOf(startId);
 
         if (username.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty()) {
             errorMessage.setText("All fields are required!");
@@ -134,6 +146,12 @@ public class UserManagementController {
             return;
         }
 
+        // Validate password requirements
+        if (password.length() < 8 || !password.chars().anyMatch(Character::isUpperCase)) {
+            errorMessage.setText("Password must be at least 8 characters long and contain at least an uppercase");
+            return;
+        }
+
         // Validate phone
         if (!phone.matches("\\d+")) {
             errorMessage.setText("Phone number must contain only digits!");
@@ -143,6 +161,44 @@ public class UserManagementController {
         // Validate email format
         if (!email.contains("@") || !email.contains(".")) {
             errorMessage.setText("Please enter a valid email address!");
+            return;
+        }
+
+        // Check if email is already used
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE email = ? AND id != ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, email);
+                statement.setString(2, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        errorMessage.setText("Email is already used, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            errorMessage.setText("Database error: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        // Check if phone number is unique
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE phone = ? AND id != ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, phone);
+                statement.setString(2, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        errorMessage.setText("Phone number is already used, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            errorMessage.setText("Database error: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
 
