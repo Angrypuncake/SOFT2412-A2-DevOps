@@ -1,19 +1,19 @@
-@font-face {
-    font-family: "Beyond Wonderland"; /* Name the font anything you like */
-    src: url("../fonts/Beyond Wonderland.ttf"); /* Use the relative path from /css to /fonts */
-}
-
-/* Apply the font globally */
+/* Apply Times New Roman globally */
 .root {
-    -fx-font-family: "Beyond Wonderland"; /* Use the custom font */
+    -fx-font-family: "Times New Roman"; /* Use Times New Roman font */
+    -fx-background-color: indigo;
+    -fx-text-fill: red; /* Red color to clearly see if CSS is applied */
 }
 
-/* Optional: Style specific elements */
+/* Apply to buttons with different color and size */
 .button {
-    -fx-font-family: "Beyond Wonderland"; /* Apply to buttons */
+    -fx-font-family: "Times New Roman"; /* Apply to buttons */
+    -fx-text-fill: blue; /* Make button text blue */
+    -fx-background-color: yellow; /* Bright yellow button background */
 }
 
+/* Apply to labels with different color and size */
 .label {
-    -fx-font-family: "Beyond Wonderland"; /* Apply to labels */
-
+    -fx-font-family: "Times New Roman"; /* Apply to labels */
+    -fx-text-fill: red; /* Make label text green */
 }
