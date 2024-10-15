@@ -1,0 +1,19 @@
+@font-face {
+    font-family: "Beyond Wonderland"; /* Name the font anything you like */
+    src: url("../fonts/Beyond Wonderland.ttf"); /* Use the relative path from /css to /fonts */
+}
+
+/* Apply the font globally */
+.root {
+    -fx-font-family: "Beyond Wonderland"; /* Use the custom font */
+}
+
+/* Optional: Style specific elements */
+.button {
+    -fx-font-family: "Beyond Wonderland"; /* Apply to buttons */
+}
+
+.label {
+    -fx-font-family: "Beyond Wonderland"; /* Apply to labels */
+
+}
