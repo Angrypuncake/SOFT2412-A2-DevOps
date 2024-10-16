@@ -24,7 +24,7 @@ public class Database {
 
     private Database() {}
 
-    private static final String URL = "jdbc:sqlite:src/main/resources/db/app_database.db";
+    private static String URL = "jdbc:sqlite:src/main/resources/db/app_database.db";
 
     // Method to establish a connection to the SQLite database
     public static Connection getConnection() throws SQLException {
@@ -251,6 +251,10 @@ public class Database {
         } catch (SQLException e) {
             throw new SQLException("Error while updating scroll: " + e.getMessage(), e);
         }
+    }
+
+    public static void setTestDbUrl(String testDbUrl) {
+        URL = testDbUrl;
     }
 
 }

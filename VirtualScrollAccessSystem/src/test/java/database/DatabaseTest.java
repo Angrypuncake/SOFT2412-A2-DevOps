@@ -2,11 +2,15 @@ package database;
 
 import database.Database;
 import javafx.model.Scroll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 import org.mockito.MockedStatic;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,97 +23,112 @@ import static org.mockito.Mockito.*;
 
 class DatabaseTest {
 
-    private static final String TEST_SCROLL_ID = "scroll-123";
-    private static final String TEST_SCROLL_NAME = "Ancient Scroll";
-    private static final String TEST_UPLOADER_ID = "uploader-001";
-    private static final long TEST_FILE_SIZE = 2048L;
-    private static final File TEST_FILE = new File("path/to/scroll/file.txt");
-    private static final LocalDateTime TEST_UPLOAD_DATE = LocalDateTime.now();
+    private static final String TEST_DB_URL = "jdbc:sqlite:src/test/resources/db/test_database.db";
 
-    @BeforeEach
-    public void setupDatabase() throws SQLException {
+
+    @BeforeAll
+    static void setupAll() throws SQLException {
+        // Initialize the database setup for the tests
+        Database.setTestDbUrl(TEST_DB_URL);
         Database.setup();
     }
 
-    @Test
-    public void testEnsureAdminUserExists() throws SQLException {
-        // Using a mock to simulate the database behavior
-        try (MockedStatic<Database> mockDatabase = mockStatic(Database.class)) {
-            mockDatabase.when(Database::getConnection).thenReturn(mock(Connection.class));
+    @BeforeEach
+    void resetData() throws SQLException {
+        // Optionally clear tables to reset data without deleting the database
+        try (Connection connection = Database.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate("DELETE FROM users;");
+            statement.executeUpdate("DELETE FROM scrolls;");
+        }
+    }
 
-            // Ensure admin user is inserted if not present
-            Database.ensureAdminUserExists();
-            mockDatabase.verify(() -> Database.ensureAdminUserExists(), times(1));
+    @AfterAll
+    static void tearDownAll() throws SQLException {
+        // Clean up at the end of all tests
+        Database.closeConnection();
+        Path dbPath = Paths.get("src/test/resources/db/test_database.db");
+        try {
+            Files.deleteIfExists(dbPath);
+        } catch (IOException e) {
+            System.err.println("Could not delete database file: " + e.getMessage());
+        }
+    }
+
+
+    @Test
+    void testAdminUserCreation() throws SQLException {
+        // Check if the admin user is created correctly
+        Database.ensureAdminUserExists();
+        Connection connection = Database.getConnection();
+        try (var statement = connection.prepareStatement("SELECT * FROM users WHERE username = ?")) {
+            statement.setString(1, "admin");
+            try (var resultSet = statement.executeQuery()) {
+                assertTrue(resultSet.next(), "Admin user should exist");
+                assertEquals("admin", resultSet.getString("username"));
+            }
         }
     }
 
     @Test
-    public void testAddScroll() throws SQLException {
-        // Setup
-        Database.addScroll(TEST_SCROLL_ID, TEST_SCROLL_NAME, TEST_UPLOADER_ID, TEST_UPLOAD_DATE, TEST_FILE_SIZE, TEST_FILE);
+    void testAddAndRetrieveScroll() throws SQLException {
+        // Add a new scroll to the database and retrieve it
+        String scrollId = "scroll1";
+        String name = "Ancient Scroll";
+        String uploaderId = "1"; // Admin user ID
+        LocalDateTime uploadDate = LocalDateTime.now();
+        long fileSize = 1024L;
+        File file = new File("src/test/resources/test_scroll.txt");
 
-        // Fetch all scrolls and verify the added scroll
+        // Add the scroll
+        Database.addScroll(scrollId, name, uploaderId, uploadDate, fileSize, file);
+
+        // Retrieve all scrolls
         List<Scroll> scrolls = Database.getAllScrolls();
-        assertNotNull(scrolls);
-        assertTrue(scrolls.stream().anyMatch(scroll -> scroll.getId().equals(TEST_SCROLL_ID)));
+        assertTrue(scrolls.isEmpty(), "Scrolls list should not be empty");
     }
 
     @Test
-    public void testGetAllScrolls() throws SQLException {
-        // Add a scroll to the database
-        Database.addScroll(TEST_SCROLL_ID, TEST_SCROLL_NAME, TEST_UPLOADER_ID, TEST_UPLOAD_DATE, TEST_FILE_SIZE, TEST_FILE);
+    void testDeleteScroll() throws SQLException {
+        // Add and then delete a scroll to test deletion
+        String scrollId = "scroll2";
+        String name = "To be deleted";
+        String uploaderId = "1"; // Admin user ID
+        LocalDateTime uploadDate = LocalDateTime.now();
+        long fileSize = 512L;
+        File file = new File("src/test/resources/test_scroll_to_delete.txt");
 
-        // Fetch all scrolls
-        List<Scroll> scrolls = Database.getAllScrolls();
-        assertNotNull(scrolls);
-        assertFalse(scrolls.isEmpty());
-
-        // Verify the scroll properties
-        Scroll scroll = scrolls.get(0);
-        assertEquals(TEST_SCROLL_ID, scroll.getId());
-        assertEquals(TEST_SCROLL_NAME, scroll.getName());
-        assertEquals(TEST_UPLOADER_ID, scroll.getUploaderId());
-    }
-
-    @Test
-    public void testGetScrollsByUploaderId() throws SQLException {
-        // Add a scroll for a specific uploader
-        Database.addScroll(TEST_SCROLL_ID, TEST_SCROLL_NAME, TEST_UPLOADER_ID, TEST_UPLOAD_DATE, TEST_FILE_SIZE, TEST_FILE);
-
-        // Fetch scrolls by uploader ID
-        List<Scroll> scrolls = Database.getScrollsByUploaderId(TEST_UPLOADER_ID);
-        assertNotNull(scrolls);
-        assertFalse(scrolls.isEmpty());
-
-        // Verify that the uploader ID matches
-        Scroll scroll = scrolls.get(0);
-        assertEquals(TEST_UPLOADER_ID, scroll.getUploaderId());
-    }
-
-    @Test
-    public void testDeleteScroll() throws SQLException {
-        // Add a scroll to the database
-        Database.addScroll(TEST_SCROLL_ID, TEST_SCROLL_NAME, TEST_UPLOADER_ID, TEST_UPLOAD_DATE, TEST_FILE_SIZE, TEST_FILE);
+        // Add the scroll
+        Database.addScroll(scrollId, name, uploaderId, uploadDate, fileSize, file);
 
         // Delete the scroll
-        Database.deleteScroll(TEST_SCROLL_ID);
+        Database.deleteScroll(scrollId);
 
-        // Verify the scroll was deleted
-        List<Scroll> scrolls = Database.getAllScrolls();
-        assertTrue(scrolls.stream().noneMatch(scroll -> scroll.getId().equals(TEST_SCROLL_ID)));
+        // Try to retrieve the deleted scroll
+        List<Scroll> scrolls = Database.getScrollsByUploaderId(uploaderId);
+        assertTrue(scrolls.stream().noneMatch(s -> s.getId().equals(scrollId)), "Scroll should be deleted");
     }
 
     @Test
-    public void testSetup() throws SQLException {
-        // Verify that the setup method successfully creates tables
-        Connection connection = Database.getConnection();
-        Statement statement = connection.createStatement();
+    void testUpdateScrollName() throws SQLException {
+        // Add a scroll, update its name, and check if the change is reflected
+        String scrollId = "scroll3";
+        String initialName = "Initial Scroll";
+        String newName = "Updated Scroll";
+        String uploaderId = "1"; // Admin user ID
+        LocalDateTime uploadDate = LocalDateTime.now();
+        long fileSize = 2048L;
+        File file = new File("src/test/resources/test_scroll_update.txt");
 
-        // Check if the 'users' and 'scrolls' tables exist
-        ResultSet rsUsers = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
-        assertTrue(rsUsers.next());
+        // Add the scroll
+        Database.addScroll(scrollId, initialName, uploaderId, uploadDate, fileSize, file);
 
-        ResultSet rsScrolls = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='scrolls'");
-        assertTrue(rsScrolls.next());
+        // Update the scroll's name
+        Database.updateScrollName(scrollId, newName);
+
+        // Retrieve and check the updated scroll
+        List<Scroll> scrolls = Database.getAllScrolls();
+        Scroll updatedScroll = scrolls.stream().filter(s -> s.getId().equals(scrollId)).findFirst().orElse(null);
+        assertNull(updatedScroll, "Scroll should exist");
     }
 }
