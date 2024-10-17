@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.AdminController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.KnightController">
    <children>
       <Button layoutX="200.0" layoutY="450.0" mnemonicParsing="false" onAction="#handleScrollManagement" prefHeight="50.0" prefWidth="200.0" text="Scroll Management">
          <font>
@@ -30,12 +30,15 @@
             <Font name="AppleGothic Regular" size="29.0" />
          </font>
       </Label>
-      <Button layoutX="532.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+      <Button layoutX="544.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
       <ButtonBar layoutX="216.0" layoutY="223.0" prefHeight="40.0" prefWidth="200.0" />
       <ImageView fitHeight="277.0" fitWidth="300.0" layoutX="162.0" layoutY="141.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/knight.png" />
          </image>
       </ImageView>
+      <Button fx:id="adminShadow" layoutY="1.0" mnemonicParsing="false" onAction="#handleAdminShadow" text="Admin" />
+      <Button fx:id="normalShadow" layoutX="54.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleNormalShadow" text="Normal" />
+      <Button fx:id="guestShadow" layoutX="111.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleGuestShadow" text="Guest" />
    </children>
 </AnchorPane>

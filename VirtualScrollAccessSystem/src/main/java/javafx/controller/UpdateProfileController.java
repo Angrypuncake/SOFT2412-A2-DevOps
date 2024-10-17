@@ -3,9 +3,7 @@ package javafx.controller;
 import database.Database;
 import javafx.fxml.FXML;
 import javafx.model.UserSession;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.utils.HashUtils;
 
@@ -28,9 +26,26 @@ public class UpdateProfileController {
     @FXML
     private TextField phoneField;
 
+    @FXML private Button adminShadow;
+    @FXML private Button normalShadow;
+    @FXML private Button guestShadow;
+
     @FXML
     public void initialize() {
         loadUserData();
+
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if(!shadow.equals("Empty")) {
+            adminShadow.setVisible(true);
+            normalShadow.setVisible(true);
+            guestShadow.setVisible(true);
+        } else {
+            normalShadow.setVisible(false);
+            guestShadow.setVisible(false);
+            adminShadow.setVisible(false);
+        }
+
     }
 
     private void loadUserData() {
@@ -223,11 +238,16 @@ public class UpdateProfileController {
     private void handleCancel() throws IOException {
         // Go to the respective homepage based on usersession
         Stage stage = (Stage) usernameField.getScene().getWindow();
-
-        String currentRole = UserSession.getInstance().getRole();
+        UserSession userSession = UserSession.getInstance();
+        String currentRole = userSession.getRole();
+        String shadow = userSession.getShadow();
 
         if (currentRole.equals("Admin")) {
-            switchScene("AdminHomePage.fxml");
+            if (shadow.equals("Empty") || shadow.equals("Admin")) {
+                switchScene("AdminHomePage.fxml");
+            } else if (shadow.equals("Normal")) {
+                switchScene("UserHomePage.fxml");
+            }
         }
         else if (currentRole.equals("Normal")) {
             switchScene("UserHomePage.fxml");
@@ -241,5 +261,48 @@ public class UpdateProfileController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void handleAdminShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Normal")) {
+            userSession.setShadow("Admin");
+            switchScene("AdminHomePage.fxml");
+        } else if (shadow.equals("Guest")) {
+            userSession.setShadow("Admin");
+            switchScene("AdminHomePage.fxml");
+        } else{
+            // error message saying already in admin type
+        }
+    }
+
+    public void handleNormalShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Admin")) {
+            userSession.setShadow("Normal");
+            switchScene("UserHomePage.fxml");
+        } else if (shadow.equals("Guest")) {
+            userSession.setShadow("Normal");
+            switchScene("UserHomePage.fxml");
+        } else{
+            // error message saying already in normal type
+        }
+
+    }
+
+    public void handleGuestShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Admin")) {
+            userSession.setShadow("Guest");
+            switchScene("UserHomePage.fxml");
+        } else if (shadow.equals("Normal")) {
+            userSession.setShadow("Guest");
+            switchScene("GuestHomePage.fxml");
+        } else{
+            // error message saying already in guest type
+        }
     }
 }

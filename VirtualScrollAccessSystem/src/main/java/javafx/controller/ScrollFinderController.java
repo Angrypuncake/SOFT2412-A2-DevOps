@@ -48,6 +48,10 @@ public class ScrollFinderController {
     @FXML
     private TextArea filePreview;  // TextArea for file preview
 
+    @FXML private Button adminShadow;
+    @FXML private Button normalShadow;
+    @FXML private Button guestShadow;
+
     private ObservableList<Scroll> allScrolls = FXCollections.observableArrayList();  // List to hold all scrolls
 
 
@@ -72,6 +76,20 @@ public class ScrollFinderController {
 
         nameSearchField.setOnKeyReleased(this::filterScrolls);
         uploaderSearchField.setOnKeyReleased(this::filterScrolls);
+
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if(!shadow.equals("Empty")) {
+            System.out.println(shadow);
+            adminShadow.setVisible(true);
+            normalShadow.setVisible(true);
+            guestShadow.setVisible(true);
+        } else {
+            normalShadow.setVisible(false);
+            guestShadow.setVisible(false);
+            adminShadow.setVisible(false);
+        }
+
     }
 
     private void filterScrolls(KeyEvent keyEvent) {
@@ -118,17 +136,28 @@ public class ScrollFinderController {
     // Handle the BackHome button click
     @FXML
     private void BackHome() throws IOException {
-        String currentRole = UserSession.getInstance().getRole();
+        UserSession userSession = UserSession.getInstance();
+        String currentRole = userSession.getRole();
+        String shadow = userSession.getShadow();
 
         if (currentRole.equals("Admin")) {
-            switchScene("AdminHomePage.fxml");
+            if (shadow.equals("Empty") || shadow.equals("Admin")) { // default
+                switchScene("AdminHomePage.fxml");
+            }
+            else if (shadow.equals("Normal")) {
+                switchScene("UserHomePage.fxml");
+            }
+            else if (shadow.equals("Normal")) {
+                switchScene("GuestHomePage.fxml");
+            }
         }
-        else if (currentRole.equals("Normal")) {
+        else if (currentRole.equals("Normal") ) {
             switchScene("UserHomePage.fxml");
         }
         else{
             switchScene("GuestHomePage.fxml");
         }
+
     }
 
     public void handleScrollManagement(ActionEvent actionEvent) {
@@ -203,8 +232,92 @@ public class ScrollFinderController {
             filePreview.setText("Unable to load the file preview.");
         }
     }
+    // These set of methods will return them to the home page of the given account type
+    // they select.
+
+    public void handleAdminShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Normal")) {
+            userSession.setShadow("Admin");
+            switchScene("AdminHomePage.fxml");
+        } else if (shadow.equals("Guest")) {
+            userSession.setShadow("Admin");
+            switchScene("AdminHomePage.fxml");
+        } else{
+            // error message saying already in admin type
+        }
+    }
+
+    public void handleNormalShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Admin")) {
+            userSession.setShadow("Normal");
+            switchScene("UserHomePage.fxml");
+        } else if (shadow.equals("Guest")) {
+            userSession.setShadow("Normal");
+            switchScene("UserHomePage.fxml");
+        } else{
+            // error message saying already in normal type
+        }
+
+    }
+
+    public void handleGuestShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Admin")) {
+            userSession.setShadow("Guest");
+            switchScene("UserHomePage.fxml");
+        } else if (shadow.equals("Normal")) {
+            userSession.setShadow("Guest");
+            switchScene("GuestHomePage.fxml");
+        } else{
+            // error message saying already in guest type
+        }
+    }
 
 
+    // These methods will change the type of user but not return them home
+    /*
+    public void handleAdminShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Normal")) {
+            userSession.setShadow("Admin");
+        } else if (shadow.equals("Guest")) {
+            userSession.setShadow("Admin");
+        } else{
+            // error message saying already in admin type
+        }
+    }
+
+    public void handleNormalShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Admin")) {
+            userSession.setShadow("Normal");
+        } else if (shadow.equals("Guest")) {
+            userSession.setShadow("Normal");
+        } else{
+            // error message saying already in normal type
+        }
+
+    }
+
+    public void handleGuestShadow(){
+        UserSession userSession = UserSession.getInstance();
+        String shadow = userSession.getShadow();
+        if (shadow.equals("Admin")) {
+            userSession.setShadow("Guest");
+        } else if (shadow.equals("Normal")) {
+            userSession.setShadow("Guest");
+        } else{
+            // error message saying already in guest type
+        }
+    }
+     */
 
 
 }
