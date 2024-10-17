@@ -4,7 +4,7 @@ import database.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.model.User1;
+import javafx.model.UsersManage;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.utils.HashUtils;
@@ -15,7 +15,7 @@ import java.util.UUID;
 import static javafx.utils.SceneUtil.switchScene;
 
 public class UserManagementController {
-    @FXML private ListView<User1> userListView;
+    @FXML private ListView<UsersManage> userListView;
     @FXML private Label nameTextField;
     @FXML private Label emailTextField;
     @FXML private Label phoneTextField;
@@ -32,7 +32,7 @@ public class UserManagementController {
     @FXML private TextField phoneField;
     @FXML private Label errorMessage;
 
-    private ObservableList<User1> userList;
+    private ObservableList<UsersManage> userList;
 
 
     @FXML
@@ -63,7 +63,7 @@ public class UserManagementController {
                 String name = rs.getString("username");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
-                User1 user = new User1(id,name,email,phone);
+                UsersManage user = new UsersManage(id,name,email,phone);
                 userList.add(user);
             }
 
@@ -72,7 +72,7 @@ public class UserManagementController {
         }
     }
 
-    private void displayUserDetails(User1 user) {
+    private void displayUserDetails(UsersManage user) {
 
         nameTextField.setText(user.getName());
         emailTextField.setText(user.getEmail());
@@ -89,7 +89,7 @@ public class UserManagementController {
 
     @FXML
     private void handleDeleteUser() {
-        User1 selectedUser = userListView.getSelectionModel().getSelectedItem();
+        UsersManage selectedUser = userListView.getSelectionModel().getSelectedItem();
         if (selectedUser != null) {
             deleteUser(selectedUser);
             userList.remove(selectedUser);
@@ -98,7 +98,7 @@ public class UserManagementController {
 
     }
 
-    private void deleteUser(User1 user) {
+    private void deleteUser(UsersManage user) {
         String query = "DELETE FROM users WHERE id = ?";
 
         try (Connection conn = Database.getConnection();
@@ -236,7 +236,7 @@ public class UserManagementController {
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
                     errorMessage.setText("User successfully registered!");
-                    User1 newUser = new User1(id, username, email, phone);
+                    UsersManage newUser = new UsersManage(id, username, email, phone);
                     userList.add(newUser);
                     clearFields();
                 } else {

@@ -7,12 +7,14 @@ public class UserSession {
     private final String userId;
     private final String username;
     private final String role;  // e.g., "Guest", "User", "Admin"
+    private String shadow; // e.g "Guest", "User", "Admin"
 
     // Private constructor to enforce Singleton pattern
     private UserSession(String userId, String username, String role) {
         this.userId = userId;
         this.username = username;
         this.role = (role == null || role.isEmpty()) ? "Guest" : role;  // Default to "Guest" if no role provided
+        this.shadow = "Empty";
     }
 
     // Static method to start a session
@@ -59,5 +61,13 @@ public class UserSession {
     // Example: Check if the user is a regular user
     public boolean isUser() {
         return "User".equals(role);
+    }
+
+    //Check if a user is in a shadow mode
+    public void setShadow(String state) {this.shadow = state;
+    }
+    //Check if a user is in a shadow mode
+    public String getShadow() {
+        return this.shadow;
     }
 }

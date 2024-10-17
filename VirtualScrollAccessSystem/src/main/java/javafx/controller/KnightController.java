@@ -1,6 +1,6 @@
 package javafx.controller;
 
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.model.UserSession;
 import javafx.scene.control.Alert;
@@ -8,81 +8,67 @@ import javafx.scene.control.Button;
 
 import static javafx.utils.SceneUtil.switchScene;
 
-public class HomePageController {
-    @FXML
-    private Button adminShadowGuest;
-    @FXML
-    private Button normalShadowGuest;
-    @FXML
-    private Button guestShadowGuest;
-
-    // Shared methods across different views
+public class KnightController {
 
     @FXML
+    private Button adminShadow;
+    @FXML
+    private Button normalShadow;
+    @FXML
+    private Button guestShadow;
+
+    private UserSession userSession;
+
+
     public void initialize() {
-        UserSession userSession = UserSession.getInstance();
+        this.userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
 
         if (!shadow.equals("Empty")) {
-            adminShadowGuest.setVisible(true);
-            normalShadowGuest.setVisible(true);
-            guestShadowGuest.setVisible(true);
+            adminShadow.setVisible(true);
+            normalShadow.setVisible(true);
+            guestShadow.setVisible(true);
         } else {
-            adminShadowGuest.setVisible(true);
-            normalShadowGuest.setVisible(true);
-            guestShadowGuest.setVisible(true);
+            adminShadow.setVisible(false);
+            normalShadow.setVisible(false);
+            guestShadow.setVisible(false);
         }
-
     }
 
     @FXML
-    public void handleLogout(ActionEvent actionEvent) {
-        UserSession.endSession();
-        switchScene("login.fxml");
+    public void handleUserManagement() {
+        switchScene("UserManagement.fxml");
     }
 
-    // User-specific methods
-    @FXML
-    public void handleProfile(ActionEvent actionEvent) {
-        switchScene("updateProfile.fxml");
-    }
-
-
-    // Helper method to show a simple alert
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Notification");
+    public void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
 
-    public void handleScrollManagement(ActionEvent actionEvent) {
-        // See if the user is a user or admin
-        UserSession userSession = UserSession.getInstance();
-        if (userSession.isGuest()) {
-            switchScene("GuestRegisterPrompt.fxml");
-        } else {
-            switchScene("ScrollManagement.fxml");
-        }
+    public void handleScrollManagement() {
+        switchScene("ScrollManagement.fxml");
     }
 
-    public void handleScrollFinder(ActionEvent actionEvent) {
+    public void handleProfile() {
+        switchScene("updateProfile.fxml");
+    }
+
+    public void handleScrollFinder() {
         switchScene("ScrollFinder.fxml");
     }
 
 
-    public void handleGuestRegister(ActionEvent actionEvent) {
-        switchScene("register.fxml");
-    }
-
-    public void handleGuestGoBack(ActionEvent actionEvent) {
-        switchScene("GuestHomePage.fxml");
-
+    public void handleLogout() {
+        // End session then logout
+        UserSession.endSession();
+        switchScene("login.fxml");
     }
 
 
-    public void handleAdminShadow(){
+    public void handleAdminShadow() {
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
         if (shadow.equals("Normal")) {
@@ -91,12 +77,12 @@ public class HomePageController {
         } else if (shadow.equals("Guest")) {
             userSession.setShadow("Admin");
             switchScene("AdminHomePage.fxml");
-        } else{
+        } else {
             // error message saying already in admin type
         }
     }
 
-    public void handleNormalShadow(){
+    public void handleNormalShadow() {
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
         if (shadow.equals("Admin")) {
@@ -105,13 +91,13 @@ public class HomePageController {
         } else if (shadow.equals("Guest")) {
             userSession.setShadow("Normal");
             switchScene("UserHomePage.fxml");
-        } else{
+        } else {
             // error message saying already in normal type
         }
 
     }
 
-    public void handleGuestShadow(){
+    public void handleGuestShadow() {
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
         if (shadow.equals("Admin")) {

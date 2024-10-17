@@ -1,12 +1,12 @@
 package javafx.model;
 
-public class User1 {
+public class UsersManage {
     private final String id;
     private final String name;
     private final String email;
     private final String phone;
 
-    public User1(String id, String name, String email, String phone) {
+    public UsersManage(String id, String name, String email, String phone) {
         this.id = id;
         this.name = name;
         this.email = email;
