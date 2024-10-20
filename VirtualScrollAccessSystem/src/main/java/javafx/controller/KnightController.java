@@ -5,11 +5,13 @@ import javafx.fxml.FXML;
 import javafx.model.UserSession;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 import static javafx.utils.SceneUtil.switchScene;
 
 public class KnightController {
 
+    public Label userLabel;
     @FXML
     private Button adminShadow;
     @FXML
@@ -33,6 +35,7 @@ public class KnightController {
             normalShadow.setVisible(false);
             guestShadow.setVisible(false);
         }
+        userLabel.setText("Normal User " + "#" + userSession.getUserId() + " " + userSession.getUsername());
     }
 
     @FXML
