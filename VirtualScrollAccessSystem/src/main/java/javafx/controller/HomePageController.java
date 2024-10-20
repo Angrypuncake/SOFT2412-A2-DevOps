@@ -28,9 +28,9 @@ public class HomePageController {
             normalShadowGuest.setVisible(true);
             guestShadowGuest.setVisible(true);
         } else {
-            adminShadowGuest.setVisible(true);
-            normalShadowGuest.setVisible(true);
-            guestShadowGuest.setVisible(true);
+            adminShadowGuest.setVisible(false);
+            normalShadowGuest.setVisible(false);
+            guestShadowGuest.setVisible(false);
         }
 
     }
