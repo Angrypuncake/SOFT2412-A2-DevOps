@@ -52,5 +52,6 @@
       <Button fx:id="shadowGuest" layoutX="110.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleGuestChange" text="Guest" visible="false" />
       <Button fx:id="shadowNormal" layoutX="53.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleNormalChange" text="Normal" visible="false" />
       <CheckBox fx:id="shadowCheckbox" layoutX="2.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleShadowMode" text="Shadow Mode" />
+      <Label fx:id="userLabel" contentDisplay="CENTER" layoutX="425.0" layoutY="26.0" text="Label" />
    </children>
 </AnchorPane>

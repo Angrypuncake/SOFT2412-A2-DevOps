@@ -12,10 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
@@ -193,8 +190,11 @@ public class ScrollFinderController {
                 Files.copy(sourceFile.toPath(), fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                 showAlert(Alert.AlertType.INFORMATION, "Download Successful", "Scroll downloaded successfully.");
+                Database.incrementDownloadCount(selectedScroll.getId());
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "Download Error", "Failed to download the scroll: " + e.getMessage());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -204,11 +204,20 @@ public class ScrollFinderController {
         File file = scroll.getBinaryFile();  // Get the file associated with the scroll
 
         if (file != null && file.exists() && file.isFile()) {
-            StringBuilder fileContent = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    fileContent.append(line).append("\n");
+            StringBuilder binaryContent = new StringBuilder();
+            try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                int byteValue;
+                int counter = 0; // Counter to limit the output size
+                while ((byteValue = fileInputStream.read()) != -1) {
+                    String binaryString = String.format("%8s", Integer.toBinaryString(byteValue & 0xFF)).replace(' ', '0'); // Convert byte to binary format
+                    binaryContent.append(binaryString).append(" ");
+                    counter++;
+
+                    // Limit the preview to the first 1000 bytes for readability
+                    if (counter >= 1000) {
+                        binaryContent.append("...");  // Indicate that the content is truncated
+                        break;
+                    }
                 }
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "File Error", "Error reading file content: " + e.getMessage());
@@ -216,22 +225,18 @@ public class ScrollFinderController {
             }
 
             // Check if the file is empty and display a message if so
-            if (fileContent.length() == 0) {
+            if (binaryContent.length() == 0) {
                 filePreview.setText("No content available.");
             } else {
-                // Limit the content to 2000 characters
-                String content = fileContent.toString();
-                if (content.length() > 2000) {
-                    content = content.substring(0, 2000) + "...";  // Truncate and append ellipsis
-                }
-
-                // Display the file content in the TextArea
-                filePreview.setText(content);
+                // Display the binary content in the TextArea
+                filePreview.setText(binaryContent.toString());
             }
         } else {
             filePreview.setText("Unable to load the file preview.");
         }
     }
+
+
     // These set of methods will return them to the home page of the given account type
     // they select.
 

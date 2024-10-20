@@ -16,12 +16,16 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import static javafx.utils.HashUtils.hashScroll;
 import static javafx.utils.SceneUtil.switchScene;
 
 
@@ -85,28 +89,60 @@ public class ScrollManagementController {
 
     // Method to upload scroll and save metadata to the database
     public void uploadScroll() throws SQLException, IOException {
-        String id = UUID.randomUUID().toString();  // Automatically generate a unique scroll ID
         String name = selectedFile.getName();  // Use the file name as the scroll name
 
         UserSession userSession = UserSession.getInstance();
         String uploaderId = userSession.getUserId();  // Retrieve uploader ID from session
+        System.out.println("Current user id is: " + userSession.getUserId());
 
-        // Generate upload metadata
-        LocalDateTime uploadDate = LocalDateTime.now();  // Current date and time
-        long fileSize = selectedFile.length();  // File size in bytes
+        // Check if a scroll with the same name already exists in the system
+        if (Database.CheckScrollExistsByName(name)) {
+            // Retrieve the scroll's uploader ID from the database
+            String existingUploaderId = Database.getUploaderIdByScrollName(name);
+            System.out.println("Uploader id is: " + existingUploaderId);
 
-        // Define where to save the file
-        File saveDirectory = new File("src/main/resources/scrolls/");
-        if (!saveDirectory.exists()) {
-            saveDirectory.mkdir();  // Create directory if it doesn't exist
+            // Check if the current uploader is the same as the existing uploader
+            if (existingUploaderId.equals(uploaderId)) {
+                // Prompt the user: Overwrite or Rename
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Scroll Exists");
+                alert.setHeaderText("You already uploaded a scroll with this name.");
+                alert.setContentText("Would you like to overwrite the existing scroll or rename this new scroll?");
+
+                ButtonType overwriteButton = new ButtonType("Overwrite");
+                ButtonType renameButton = new ButtonType("Rename");
+                ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                alert.getButtonTypes().setAll(overwriteButton, renameButton, cancelButton);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == overwriteButton) {
+                    // Overwrite the scroll - proceed with the upload
+                    String id = Database.getScrollIdByName(name);  // Retrieve the scroll ID for the existing scroll
+                    processScrollUpload(id, name, uploaderId);  // Update the existing scroll
+
+                } else if (result.isPresent() && result.get() == renameButton) {
+                    // Rename the scroll and proceed with the upload
+                    String newName = promptForNewScrollName();  // Ask the user to input a new scroll name
+                    String newId = hashScroll(uploaderId, newName);
+                    processScrollUpload(newId, newName, uploaderId);  // Insert the new scroll
+                } else {
+                    // User cancelled the upload
+                    showAlert(Alert.AlertType.INFORMATION, "Cancelled", "Scroll upload cancelled.");
+                    return;
+                }
+            } else {
+                // Different uploader, enforce renaming
+                showAlert(Alert.AlertType.WARNING, "Scroll Exists", "A scroll with this name already exists. You must rename it.");
+                String newName = promptForNewScrollName();  // Ask the user to input a new scroll name
+                String newId = hashScroll(uploaderId, newName);
+                processScrollUpload(newId, newName, uploaderId);  // Insert the new scroll
+            }
+        } else {
+            // Scroll with this name doesn't exist, proceed with the upload
+            String id = hashScroll(uploaderId, name);
+            processScrollUpload(id, name, uploaderId);  // Insert the new scroll
         }
-
-        // Save file to the "scrolls" directory
-        File savedFile = new File(saveDirectory, selectedFile.getName());
-        Files.copy(selectedFile.toPath(), savedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-        // Add scroll metadata to the database
-        Database.addScroll(id, name, uploaderId, uploadDate, fileSize, savedFile);
 
         // Refresh the scroll list after upload
         loadScrollsForCurrentUser();
@@ -114,6 +150,39 @@ public class ScrollManagementController {
         selectedFile = null;  // Clear the selected file
         showAlert(Alert.AlertType.INFORMATION, "Success", "Scroll uploaded successfully.");
     }
+
+    // Helper method to handle the actual scroll upload
+    private void processScrollUpload(String id, String name, String uploaderId) throws SQLException, IOException {
+        LocalDateTime uploadDate = LocalDateTime.now();  // Current date and time
+        long fileSize = selectedFile.length();  // File size in bytes
+
+        // Define where to save the file - using a relative path
+        Path saveDirectory = Paths.get("src", "main", "resources", "scrolls");
+        Files.createDirectories(saveDirectory);  // Ensure directory exists
+
+        // Save file to the "scrolls" directory with a relative path
+        Path savedFilePath = saveDirectory.resolve(selectedFile.getName());
+        Files.copy(selectedFile.toPath(), savedFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // Store the relative path as a string
+        String relativePath = "src/main/resources/scrolls/" + selectedFile.getName();
+        System.out.println("File saved at: " + savedFilePath.toAbsolutePath().toString());
+
+        // Add or update scroll metadata to the database
+        Database.addScroll(id, name, uploaderId, uploadDate, fileSize, relativePath);
+    }
+
+    // Helper method to prompt user for a new scroll name
+    private String promptForNewScrollName() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Rename Scroll");
+        dialog.setHeaderText("Enter a new name for your scroll:");
+        dialog.setContentText("Scroll Name:");
+
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse("Unnamed Scroll");
+    }
+
 
     // Method to display only the scrolls uploaded by the current user
     @FXML
@@ -217,6 +286,8 @@ public class ScrollManagementController {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Scroll deleted successfully.");
             } catch (SQLException e) {
                 showAlert(Alert.AlertType.ERROR, "Database Error", "Error deleting scroll: " + e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -237,23 +308,32 @@ public class ScrollManagementController {
             return;
         }
 
-        // Confirm update
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirm Update");
-        confirmationAlert.setHeaderText("Are you sure you want to update this scroll?");
-        confirmationAlert.setContentText("The name will be updated to: " + updatedName);
+        try {
+            // Check if the new name already exists under any uploader
+            if (Database.CheckScrollExistsByName(updatedName)) {
+                showAlert(Alert.AlertType.ERROR, "Name Conflict", "A scroll with this name already exists. Please choose a different name.");
+                return;
+            }
 
-        if (confirmationAlert.showAndWait().get() == ButtonType.OK) {
-            try {
+            // Confirm update
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Confirm Update");
+            confirmationAlert.setHeaderText("Are you sure you want to update this scroll?");
+            confirmationAlert.setContentText("The name will be updated to: " + updatedName);
+
+            if (confirmationAlert.showAndWait().get() == ButtonType.OK) {
                 // Update the scroll name in the database
                 Database.updateScrollName(selectedScroll.getId(), updatedName);
                 loadScrollsForCurrentUser();  // Refresh the TableView after the update
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Scroll updated successfully.");
-            } catch (SQLException e) {
-                showAlert(Alert.AlertType.ERROR, "Database Error", "Error updating scroll: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Error updating scroll: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
 
     // Method to filter scrolls by name based on user input
     private void filterScrolls(KeyEvent event) {

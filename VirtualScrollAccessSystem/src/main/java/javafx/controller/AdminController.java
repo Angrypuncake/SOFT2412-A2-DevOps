@@ -10,6 +10,7 @@ import static javafx.utils.SceneUtil.switchScene;
 
 public class AdminController {
 
+    public Label userLabel;
     @FXML private Button shadowAdmin;
     @FXML private Button shadowNormal;
     @FXML private Button shadowGuest;
@@ -27,6 +28,8 @@ public class AdminController {
             shadowGuest.setVisible(true);
         }
         shadowCheckbox.setSelected(!shadow.equals("Empty"));
+
+        userLabel.setText("Admin User " + "#" + userSession.getUserId() + " " + userSession.getUsername());
     }
 
     @FXML
