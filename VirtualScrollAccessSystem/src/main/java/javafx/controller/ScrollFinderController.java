@@ -74,6 +74,9 @@ public class ScrollFinderController {
         nameSearchField.setOnKeyReleased(this::filterScrolls);
         uploaderSearchField.setOnKeyReleased(this::filterScrolls);
 
+        fromDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> filterScrolls(null));
+        toDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> filterScrolls(null));
+
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
         if(!shadow.equals("Empty")) {
@@ -89,7 +92,7 @@ public class ScrollFinderController {
 
     }
 
-    private void filterScrolls(KeyEvent keyEvent) {
+    private void filterScrolls(Object keyEvent) {
         String nameSearch = nameSearchField.getText().toLowerCase();
         String uploaderSearch = uploaderSearchField.getText().toLowerCase();
         LocalDate fromDate = fromDatePicker.getValue();
