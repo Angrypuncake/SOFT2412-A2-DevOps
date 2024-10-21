@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.HomePageController" spacing="20" alignment="CENTER">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.HomePageController" spacing="20" alignment="CENTER" stylesheets="@css/example.css">
 
     <!-- Title / Prompt Text -->
     <Text text="Welcome! Please Register or Go Back" style="-fx-font-size: 18px; -fx-font-weight: bold;" />

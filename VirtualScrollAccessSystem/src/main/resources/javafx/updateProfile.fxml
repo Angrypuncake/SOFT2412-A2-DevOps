@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="800" prefWidth="600" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UpdateProfileController">
+<AnchorPane prefHeight="800" prefWidth="600" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UpdateProfileController" stylesheets="@css/example.css">
 
     <!-- Horizontal Box for buttons aligned at the top left -->
     <HBox layoutX="10" layoutY="10" spacing="10">
@@ -22,11 +22,12 @@
     <!-- Main Content Section (VBox) centered in the window -->
     <VBox alignment="CENTER" layoutX="100" layoutY="100" spacing="10" AnchorPane.bottomAnchor="100" AnchorPane.leftAnchor="100" AnchorPane.rightAnchor="100" AnchorPane.topAnchor="100">
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Update Profile" translateY="-20.0">
+
+        <Label text="Update Profile">
             <font>
-                <Font name="System Bold" size="40.0" />
+                <Font size="40.0" />
             </font>
-        </Text>
+        </Label>
 
         <!-- Username -->
         <Label text="Username" />
@@ -45,8 +46,8 @@
         <TextField fx:id="phoneField" prefHeight="50.0" prefWidth="400.0" promptText="Enter new phone number" />
 
         <!-- Buttons for Update and Cancel -->
-        <Button onAction="#handleUpdateProfile" style="-fx-background-color: green; -fx-text-fill: white; -fx-pref-width: 200; -fx-pref-height: 50;" text="Update" translateY="20.0" />
-        <Button onAction="#handleCancel" style="-fx-background-color: red; -fx-text-fill: white; -fx-pref-width: 200; -fx-pref-height: 50;" text="Cancel" translateY="40.0" />
+        <Button onAction="#handleUpdateProfile" style="-fx-background-color: #0cfa54; -fx-pref-width: 200; -fx-pref-height: 50;" text="Update" translateY="20.0" />
+        <Button onAction="#handleCancel" style="-fx-background-color: red; -fx-pref-width: 200; -fx-pref-height: 50;" text="Cancel" translateY="40.0" />
 
     </VBox>
 

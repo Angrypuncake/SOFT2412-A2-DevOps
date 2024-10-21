@@ -1,4 +1,8 @@
 /* Apply Times New Roman globally */
+@font-face {
+    -font-family: "Magic School One";
+    src: url("../fonts/MagicSchoolOne.ttf");
+}
 .root {
     -fx-font-family: "Times New Roman"; /* Use Times New Roman font */
     -fx-background-color: indigo;
@@ -15,5 +19,35 @@
 /* Apply to labels with different color and size */
 .label {
     -fx-font-family: "Times New Roman"; /* Apply to labels */
-    -fx-text-fill: red; /* Make label text green */
+    -fx-text-fill: gold; /* Make label text green */
+}
+.check-box {
+    -fx-font-family: "Times New Roman"; /* Apply to labels */
+    -fx-text-fill: gold; /* Make label text green */
+}
+
+.table-cell{
+    -fx-background-color: darkslateblue;
+    -fx-text-fill: gold;
+    -fx-border-color: indigo;
+}
+
+.column-header-background{
+    -fx-background-color: darkslateblue;
+}
+
+.table-view .column-header,
+.table-view .column-header .label{
+    -fx-background-color: darkslateblue;
+}
+
+
+.list-cell{
+    -fx-text-fill: gold;
+    -fx-background-color: darkslateblue;
+}
+
+.list-cell:selected {
+    -fx-background-color: gold;
+    -fx-text-fill: blue;
 }

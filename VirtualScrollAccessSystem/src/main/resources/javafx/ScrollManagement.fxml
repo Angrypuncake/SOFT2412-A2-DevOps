@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" spacing="10" style="-fx-pref-height: 800; -fx-pref-width: 600;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.ScrollManagementController">
+<VBox alignment="CENTER" spacing="10" style="-fx-pref-height: 800; -fx-pref-width: 600;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.ScrollManagementController" stylesheets="@css/example.css">
    <Button fx:id="adminShadow" mnemonicParsing="false" onAction="#handleAdminShadow" text="Admin">
       <VBox.margin>
          <Insets left="-550.0" top="-80.0" />
@@ -27,11 +27,12 @@
          <Insets left="-300.0" top="-36.0" />
       </VBox.margin>
    </Button>
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Manage Your Scrolls">
+
+    <Label text="Manage Your Scrolls">
         <font>
             <Font size="50.0" />
         </font>
-    </Text>
+    </Label>
 
     <!-- Button to select and upload a file -->
     <Button onAction="#chooseFile" text="Select File to Upload" />

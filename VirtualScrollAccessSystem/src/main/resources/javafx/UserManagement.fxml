@@ -12,8 +12,10 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UserManagementController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UserManagementController" stylesheets="@css/example.css">
    <children>
+      <Button layoutX="543.0" layoutY="0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="26.0" prefWidth="55.0" text="Logout" />
+      <Button layoutX="483.0" layoutY="0" mnemonicParsing="false" onAction="#handleHome" prefHeight="26.0" prefWidth="55.0" text="Home" />
       <ListView fx:id="userListView" layoutX="54.0" layoutY="449.0" prefHeight="224.0" prefWidth="220.0" />
       <Button fx:id="handleAddUser" layoutX="378.0" layoutY="635.0" mnemonicParsing="false" onAction="#handleAddUser" prefHeight="35.0" prefWidth="160.0" text="Add New User ">
          <font>
@@ -77,8 +79,6 @@
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
-      <Button layoutX="543.0" layoutY="772.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
-      <Button layoutX="485.0" layoutY="772.0" mnemonicParsing="false" onAction="#handleHome" prefHeight="26.0" prefWidth="55.0" text="Home" />
       <TextField fx:id="usernameField" alignment="CENTER" layoutX="378.0" layoutY="464.0" prefHeight="26.0" prefWidth="160.0" promptText="Username" />
       <PasswordField fx:id="passwordField" alignment="CENTER" layoutX="378.0" layoutY="506.0" prefHeight="26.0" prefWidth="160.0" promptText="Password" />
       <TextField fx:id="emailField" alignment="CENTER" layoutX="378.0" layoutY="547.0" prefHeight="26.0" prefWidth="160.0" promptText="Email" />
