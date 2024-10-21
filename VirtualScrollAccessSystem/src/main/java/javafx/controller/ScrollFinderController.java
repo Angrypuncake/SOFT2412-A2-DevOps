@@ -276,7 +276,6 @@ public class ScrollFinderController {
     public void handleGuestShadow(){
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
-        System.out.println("Current shadow is " + shadow);
         if (shadow.equals("Admin")) {
             userSession.setShadow("Guest");
             switchScene("UserHomePage.fxml");
