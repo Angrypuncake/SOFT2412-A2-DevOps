@@ -309,6 +309,11 @@ public class ScrollManagementController {
         }
 
         try {
+            // If scroll name remains same, handle here
+            if(updatedName.equals(selectedScroll.getName())) {
+                showAlert(Alert.AlertType.INFORMATION, "No Changes", "The scroll remains the same.");
+                return;
+            }
             // Check if the new name already exists under any uploader
             if (Database.CheckScrollExistsByName(updatedName)) {
                 showAlert(Alert.AlertType.ERROR, "Name Conflict", "A scroll with this name already exists. Please choose a different name.");
