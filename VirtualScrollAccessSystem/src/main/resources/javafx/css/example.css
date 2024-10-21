@@ -42,6 +42,11 @@
 }
 
 
+.table-view{
+    -fx-background-color: darkslateblue;
+}
+
+
 .list-cell{
     -fx-text-fill: gold;
     -fx-background-color: darkslateblue;
@@ -51,3 +56,4 @@
     -fx-background-color: gold;
     -fx-text-fill: blue;
 }
+

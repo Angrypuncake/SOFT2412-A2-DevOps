@@ -2,6 +2,7 @@ package javafx.controller;
 
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.model.UserSession;
 import javafx.scene.control.Alert;
 import javafx.scene.control.*;
@@ -21,6 +22,7 @@ public class AdminController {
 
     public void initialize() {
         this.userSession = UserSession.getInstance();
+        userLabel.setAlignment(Pos.CENTER);
         String shadow = userSession.getShadow();
         if (!shadow.equals("Empty")) {
             shadowAdmin.setVisible(true);

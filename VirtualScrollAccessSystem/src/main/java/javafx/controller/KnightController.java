@@ -2,6 +2,7 @@ package javafx.controller;
 
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.model.UserSession;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -25,7 +26,7 @@ public class KnightController {
     public void initialize() {
         this.userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
-
+        userLabel.setAlignment(Pos.CENTER);
         if (!shadow.equals("Empty")) {
             adminShadow.setVisible(true);
             normalShadow.setVisible(true);
