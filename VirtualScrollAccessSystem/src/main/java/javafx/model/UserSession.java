@@ -4,7 +4,7 @@ public class UserSession {
 
     private static UserSession instance;
 
-    private final String userId;
+    private String userId;
     private final String username;
     private final String role;  // e.g., "Guest", "User", "Admin"
     private String shadow; // e.g "Guest", "User", "Admin"
@@ -46,6 +46,11 @@ public class UserSession {
 
     public String getRole() {
         return role;
+    }
+
+    // Set UID
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     // Example: Check if the user is an admin
