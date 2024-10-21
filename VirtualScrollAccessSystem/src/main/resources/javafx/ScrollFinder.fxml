@@ -37,6 +37,7 @@
     <!-- TableView for displaying all scrolls -->
     <TextField fx:id="nameSearchField" promptText="Search by name" style="-fx-pref-width: 400;" />
     <TextField fx:id="uploaderSearchField" promptText="Search by uploader" style="-fx-pref-width: 400;" />
+    <TextField fx:id="idSearchField" promptText="Search by scroll id" style="-fx-pref-width: 400;" />
     <DatePicker fx:id="fromDatePicker" promptText="From date" />
     <DatePicker fx:id="toDatePicker" promptText="To date" />
     <TableView fx:id="scrollTable" prefHeight="225.0" prefWidth="500">
@@ -47,9 +48,6 @@
             <TableColumn fx:id="uploadDate" prefWidth="150" text="Date Uploaded" />
         </columns>
     </TableView>
-
-    <!-- Scroll Management Button -->
-    <Button onAction="#handleScrollManagement" prefWidth="200" text="Scroll Management" />
 
     <!-- Download button -->
     <Button onAction="#handleDownload" prefWidth="200" text="Download Selected Scroll" />
