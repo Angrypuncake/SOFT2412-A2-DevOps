@@ -27,6 +27,7 @@ public class ScrollFinderController {
     public TextField uploaderSearchField;
     public DatePicker fromDatePicker;
     public DatePicker toDatePicker;
+    public TextField idSearchField;
     @FXML
     private TableView<Scroll> scrollTable;
 
@@ -73,6 +74,7 @@ public class ScrollFinderController {
 
         nameSearchField.setOnKeyReleased(this::filterScrolls);
         uploaderSearchField.setOnKeyReleased(this::filterScrolls);
+        idSearchField.setOnKeyReleased(this::filterScrolls);
 
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
@@ -92,6 +94,7 @@ public class ScrollFinderController {
     private void filterScrolls(KeyEvent keyEvent) {
         String nameSearch = nameSearchField.getText().toLowerCase();
         String uploaderSearch = uploaderSearchField.getText().toLowerCase();
+        String idSearch = idSearchField.getText().toLowerCase();
         LocalDate fromDate = fromDatePicker.getValue();
         LocalDate toDate = toDatePicker.getValue();
 
@@ -102,8 +105,9 @@ public class ScrollFinderController {
             boolean matchesUploader = scroll.getUploaderUsername().toLowerCase().contains(uploaderSearch);
             boolean matchesDate = (fromDate == null || !scroll.getUploadDate().isBefore(fromDate.atStartOfDay())) &&
                     (toDate == null || !scroll.getUploadDate().isAfter(toDate.atTime(23, 59, 59)));
+            boolean matchesId = scroll.getId().toLowerCase().startsWith(idSearch);
 
-            if (matchesName && matchesUploader && matchesDate) {
+            if (matchesName && matchesUploader && matchesDate && matchesId) {
                 filteredScrolls.add(scroll);
             }
         }
@@ -144,7 +148,7 @@ public class ScrollFinderController {
             else if (shadow.equals("Normal")) {
                 switchScene("UserHomePage.fxml");
             }
-            else if (shadow.equals("Normal")) {
+            else if (shadow.equals("Guest")) {
                 switchScene("GuestHomePage.fxml");
             }
         }
@@ -272,6 +276,7 @@ public class ScrollFinderController {
     public void handleGuestShadow(){
         UserSession userSession = UserSession.getInstance();
         String shadow = userSession.getShadow();
+        System.out.println("Current shadow is " + shadow);
         if (shadow.equals("Admin")) {
             userSession.setShadow("Guest");
             switchScene("UserHomePage.fxml");

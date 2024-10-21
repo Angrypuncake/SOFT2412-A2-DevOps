@@ -4,6 +4,7 @@ import database.Database;
 import javafx.MainApp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.model.Scroll;
 import javafx.model.UserSession;
@@ -32,6 +33,8 @@ import static javafx.utils.SceneUtil.switchScene;
 public class ScrollManagementController {
 
 
+    public TextArea scrollContentTextArea;
+    public Button saveContentButton;
     @FXML
     private TableView<Scroll> scrollTable;
 
@@ -207,12 +210,13 @@ public class ScrollManagementController {
         uploaderColumn.setCellValueFactory(new PropertyValueFactory<>("uploaderUsername"));
         uploadDate.setCellValueFactory(new PropertyValueFactory<>("uploadDate"));
 
-        // Populate the form when a scroll is selected
         scrollTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 scrollNameField.setText(newValue.getName());
+                loadScrollContent(newValue);  // Load the scroll content from file
             }
         });
+
 
         // Load only the current user's scrolls
         loadScrollsForCurrentUser();
@@ -232,6 +236,19 @@ public class ScrollManagementController {
             adminShadow.setVisible(false);
         }
     }
+
+    private void loadScrollContent(Scroll selectedScroll) {
+        try {
+            // Load the scroll file content into the TextArea
+            Path scrollPath = selectedScroll.getBinaryFile().toPath();
+            String scrollContent = Files.readString(scrollPath);
+            scrollContentTextArea.setText(scrollContent);
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load scroll content: " + e.getMessage());
+        }
+    }
+
+
 
 
     // Utility method to show an alert dialog
@@ -399,7 +416,28 @@ public class ScrollManagementController {
     }
 
 
+    @FXML
+    public void handleSaveScrollContent() {
+        Scroll selectedScroll = scrollTable.getSelectionModel().getSelectedItem();
+        if (selectedScroll == null) {
+            showAlert(Alert.AlertType.ERROR, "No Selection", "Please select a scroll to update.");
+            return;
+        }
 
+        String updatedContent = scrollContentTextArea.getText();
+        if (updatedContent == null || updatedContent.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Scroll content cannot be empty.");
+            return;
+        }
 
+        try {
+            // Save the updated content back to the file
+            Path scrollPath = selectedScroll.getBinaryFile().toPath();
+            Files.writeString(scrollPath, updatedContent);
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Scroll content updated successfully.");
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to update scroll content: " + e.getMessage());
+        }
+    }
 
 }
