@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
+<?import javafx.scene.PointLight?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.Color?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024" prefWidth="600.0" style="-fx-background-image: url('Images/swordbackground.png'); -fx-background-size: cover; -fx-background-position: center;" stylesheets="@css/example.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024" prefWidth="600.0" style="-fx-background-image: url('Images/swordbackground.png'); -fx-background-size: cover; -fx-background-position: center;" stylesheets="@css/example.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.LoginController">
 
 <children>
-      <Label fx:id="virtualLabel" layoutX="158.0" layoutY="188.0" prefHeight="135.0" prefWidth="178.0" text="Virtual" textFill="#fffefe" />
-      <Label fx:id="accessLabel" layoutX="93.0" layoutY="367.0" text="Access" textFill="#fffefe" />
-      <Label fx:id="scrollLabel" layoutX="301.0" layoutY="205.0" prefHeight="101.0" prefWidth="119.0" text="Scroll" textFill="#fffefe" />
-      <Label fx:id="systemLabel" layoutX="367.0" layoutY="367.0" text="System" textFill="#fffefe">
+      <Label fx:id="virtualLabel" layoutX="118.0" layoutY="127.0" prefHeight="135.0" prefWidth="178.0" text="Virtual" textFill="#fffefe" />
+      <Label fx:id="accessLabel" layoutX="66.0" layoutY="269.0" text="Access" textFill="#fffefe" />
+      <Label fx:id="scrollLabel" layoutX="323.0" layoutY="195.0" prefHeight="101.0" prefWidth="224.0" text="Scroll" textFill="#fffefe" />
+      <Label fx:id="systemLabel" layoutX="367.0" layoutY="324.0" text="System" textFill="#fffefe">
          <effect>
             <Blend />
          </effect></Label>
@@ -35,7 +42,7 @@
             <Image url="@Images/wizard.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="52.0" fitWidth="38.0" layoutX="437.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="52.0" fitWidth="38.0" layoutX="502.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/scroll.png" />
          </image>
