@@ -25,6 +25,8 @@ public class UpdateProfileController {
     private PasswordField passwordField;
     @FXML
     private TextField phoneField;
+    @FXML
+    private TextField idField;
 
     @FXML private Button adminShadow;
     @FXML private Button normalShadow;
@@ -67,6 +69,7 @@ public class UpdateProfileController {
                     usernameField.setText(username);
                     emailField.setText(email);
                     phoneField.setText(phone);
+                    idField.setText(userId);
 
                 }
             }
@@ -79,6 +82,7 @@ public class UpdateProfileController {
     // Handle the update button click
     @FXML
     private void handleUpdateProfile() {
+        String id = idField.getText();
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -87,6 +91,12 @@ public class UpdateProfileController {
         // Get the current user's ID from the session
         UserSession session = UserSession.getInstance();
         String userId = session.getUserId();
+
+        //Validate ID
+        if (!id.matches("^[a-z0-9]+$") && !id.matches("^[0-9]+$")) {
+            showAlert("Error","ID must only contain lowercases and numbers.");
+            return;
+        }
 
         // Validate username format
         if (!username.matches("^[A-Za-z0-9_]+$")) {
@@ -109,6 +119,24 @@ public class UpdateProfileController {
         // Validate email format
         if (!email.contains("@") || !email.contains(".")) {
             showAlert("Error","Please enter a valid email address!");
+            return;
+        }
+
+        // Check if id is already taken
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        showAlert("Error","ID is already taken, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            showAlert("Error","Database error: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
 
@@ -173,6 +201,11 @@ public class UpdateProfileController {
         StringBuilder updateSQL = new StringBuilder("UPDATE users SET ");
         boolean hasUpdates = false;
 
+        if (!id.isEmpty()) {
+            updateSQL.append("id = ?");
+            hasUpdates = true;
+        }
+
         if (!username.isEmpty()) {
             updateSQL.append("username = ?, ");
             hasUpdates = true;
@@ -201,6 +234,10 @@ public class UpdateProfileController {
         try (Connection connection = Database.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(updateSQL.toString())) {
                 int parameterIndex = 1;
+
+                if (!id.isEmpty()) {
+                    statement.setString(parameterIndex++, id);
+                }
 
                 if (!username.isEmpty()) {
                     statement.setString(parameterIndex++, username);
