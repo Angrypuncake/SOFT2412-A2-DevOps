@@ -3,10 +3,33 @@
     -font-family: "Magic School One";
     src: url("../fonts/MagicSchoolOne.ttf");
 }
+
+
 .root {
     -fx-font-family: "Times New Roman"; /* Use Times New Roman font */
-    -fx-background-color: indigo;
+    -fx-background-color: #2C1A47;
     -fx-text-fill: red; /* Red color to clearly see if CSS is applied */
+}
+
+#virtualLabel, #accessLabel, #scrollLabel, #systemLabel {
+    -fx-font-size: 64px;
+    -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, gold 0%, orange 100%); /* Gradient from gold to orange */
+    -fx-font-family: "Magic School One";
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 10, 0.5, 2, 2); /* Subtle shadow for depth */
+    -fx-background-color: transparent;
+    -fx-stroke: black; /* Black stroke around the text */
+    -fx-stroke-width: 1.5px; /* Stroke width for clarity */
+    -fx-glow: 0.8; /* Add a soft glow to enhance the magical effect */
+}
+
+
+
+
+
+#loginLabel {
+    -fx-font-size: 29px;
+    -fx-text-fill: gold; /* White color */
+    -fx-font-family: "Times New Roman";
 }
 
 /* Apply to buttons with different color and size */
@@ -29,7 +52,7 @@
 .table-cell{
     -fx-background-color: darkslateblue;
     -fx-text-fill: gold;
-    -fx-border-color: indigo;
+    -fx-border-color: #2C1A47;
 }
 
 .column-header-background{
@@ -60,15 +83,29 @@
 .button {
     -fx-font-family: "Times New Roman"; /* Apply to buttons */
     -fx-text-fill: #FFD700; /* Soft gold text for a magical feel */
-    -fx-background-color: #4B0082; /* Rich indigo background */
+    -fx-background-color: #2C1A47; /* Rich indigo background */
     -fx-border-color: #FFD700; /* Gold border to highlight the button */
     -fx-border-width: 2px; /* Optional: add a border for a more defined look */
 }
 
+/* Button glow effect and custom cursor */
 .button:hover {
-    -fx-background-color: #5D3FD3; /* Lighter glowing indigo on hover */
-    -fx-text-fill: #F0F8FF; /* Silvery white text when hovered */
+    -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.5, 0, 0); /* Gold glow */
+    -fx-background-color: #2C1A47; /* Consistent background */
+    -fx-text-fill: #FFD700; /* Gold text */
+    -fx-cursor: hand; /* Hand cursor on hover */
 }
+
+/* Apply a custom cursor to the entire root */
+/* Apply a custom cursor to the entire root */
+/*.root {*/
+/*    -fx-cursor: url('../cursors/sword.png'), auto; !* Custom magic wand cursor *!*/
+/*}*/
+
+.root {
+    cursor: url('javafx/cursors/icons8-fantasy-48.png'), auto;
+}
+
 
 
 /* TextFields and PasswordFields */
@@ -81,10 +118,11 @@
     -fx-background-radius: 5; /* Rounded corners for a smoother look */
 }
 
-/* On focus */
+/* On focus: TextField and PasswordField */
 .text-field:focused, .password-field:focused {
+    -fx-effect: dropshadow(gaussian, #5D3FD3, 20, 0.5, 0, 0); /* Soft indigo glow */
     -fx-background-color: #3C096C; /* Darker purple when focused */
-    -fx-border-color: #EEC643; /* Lighter gold border when focused */
+    -fx-border-color: #5D3FD3; /* Indigo border for focus */
     -fx-text-fill: #FFFFFF; /* Bright white text when focused */
 }
 
@@ -141,4 +179,55 @@
 /* Horizontal Scroll Bar */
 .table-view .scroll-bar:horizontal .thumb {
     -fx-min-width: 20px; /* Minimum size for horizontal scroll thumb */
+}
+
+
+/* Scroll bars inside list views */
+.list-view .scroll-bar {
+    -fx-background-color: #2C1A47; /* Soft indigo background for scroll bar */
+}
+
+.list-view .scroll-bar .thumb {
+    -fx-background-color: #FFD700; /* Gold thumb for the magical feel */
+    -fx-background-radius: 5; /* Rounded thumb corners */
+}
+
+.list-view .scroll-bar .increment-button,
+.list-view .scroll-bar .decrement-button {
+    -fx-background-color: #4B0082; /* Dark indigo for scroll buttons */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-padding: 3; /* Small padding for buttons */
+}
+
+.list-view .scroll-bar .track {
+    -fx-background-color: #3C096C; /* Dark purple track for magical feel */
+    -fx-background-radius: 5; /* Rounded corners for the track */
+}
+
+/* Hover effect for the thumb */
+.list-view .scroll-bar .thumb:hover {
+    -fx-background-color: #EEC643; /* Lighter gold on hover */
+}
+
+/* Vertical Scroll Bar */
+.list-view .scroll-bar:vertical .thumb {
+    -fx-min-height: 20px; /* Minimum size for vertical scroll thumb */
+}
+
+/* Horizontal Scroll Bar */
+.list-view .scroll-bar:horizontal .thumb {
+    -fx-min-width: 20px; /* Minimum size for horizontal scroll thumb */
+}
+
+/* ListView cells styling */
+.list-cell {
+    -fx-background-color: #2C1A47; /* Soft indigo background for list items */
+    -fx-text-fill: #F0F8FF; /* Silvery white text for list items */
+    -fx-border-color: #FFD700; /* Gold border for list items */
+    -fx-border-width: 1px;
+}
+
+.list-cell:selected {
+    -fx-background-color: #5D3FD3; /* Glowing indigo background for selected list item */
+    -fx-text-fill: #FFD700; /* Gold text for selected item */
 }

@@ -13,7 +13,6 @@ public class SceneUtil {
     // Constants for window dimensions (optional)
     public static final int DEFAULT_WINDOW_WIDTH = 600;
     public static final int DEFAULT_WINDOW_HEIGHT = 800;
-
     // Utility method to change the scene
     public static void switchScene(String fxmlFileName) {
         try {

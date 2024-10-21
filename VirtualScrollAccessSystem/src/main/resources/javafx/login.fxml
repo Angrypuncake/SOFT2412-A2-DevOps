@@ -1,68 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="800.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="javafx.controller.LoginController"
-            stylesheets="@css/example.css">
-   <children>
-      <Label layoutX="53.0" layoutY="90.0" text="Virtual " textFill="#fffefe">
-         <font>
-            <Font size="64.0" />
-         </font>
-      </Label>
-      <Label layoutX="107.0" layoutY="206.0" text="Access" textFill="#fffefe">
-         <font>
-            <Font size="64.0" />
-         </font>
-      </Label>
-      <Label layoutX="326.0" layoutY="137.0" text="Scroll" textFill="#fffefe">
-         <font>
-            <Font size="64.0" />
-         </font>
-      </Label>
-      <Label layoutX="260.0" layoutY="286.0" text="System " textFill="#fffefe">
-         <font>
-            <Font name="Arial Black" size="64.0" />
-         </font>
-      </Label>
-      <Label layoutX="255.0" layoutY="465.0" text="Login" textFill="WHITE">
-         <font>
-            <Font name="Arial" size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="errorMessageLabel" alignment="CENTER" layoutX="217.0" layoutY="716.0" prefHeight="17.0" prefWidth="160.0" textAlignment="CENTER" textFill="#fc0000" />
-      <PasswordField fx:id="passwordField" layoutX="215.0" layoutY="557.0" prefHeight="26.0" prefWidth="162.0" promptText="Password" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024" prefWidth="600.0" style="-fx-background-image: url('Images/swordbackground.png'); -fx-background-size: cover; -fx-background-position: center;" stylesheets="@css/example.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.LoginController">
+
+<children>
+      <Label fx:id="virtualLabel" layoutX="158.0" layoutY="188.0" prefHeight="135.0" prefWidth="178.0" text="Virtual" textFill="#fffefe" />
+      <Label fx:id="accessLabel" layoutX="93.0" layoutY="367.0" text="Access" textFill="#fffefe" />
+      <Label fx:id="scrollLabel" layoutX="301.0" layoutY="205.0" prefHeight="101.0" prefWidth="119.0" text="Scroll" textFill="#fffefe" />
+      <Label fx:id="systemLabel" layoutX="367.0" layoutY="367.0" text="System" textFill="#fffefe">
+         <effect>
+            <Blend />
+         </effect></Label>
+      <Label fx:id="loginLabel" layoutX="264.0" layoutY="451.0" text="Login" textFill="WHITE" />
+
+      <Label fx:id="errorMessageLabel" alignment="CENTER" layoutX="216.0" layoutY="697.0" prefHeight="17.0" prefWidth="160.0" textAlignment="CENTER" textFill="#fc0000" />
+      <PasswordField fx:id="passwordField" alignment="CENTER" layoutX="214.0" layoutY="538.0" prefHeight="26.0" prefWidth="162.0" promptText="Enter your passweord" />
       <!-- Updated Login Button -->
-      <Button layoutX="215.0" layoutY="591.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="26.0" prefWidth="162.0"
-              style="-fx-background-color: #4B0082; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Login" />
+      <Button layoutX="214.0" layoutY="572.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #2C1A47; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Login" />
 
       <!-- Updated Register Button -->
-      <Button layoutX="215.0" layoutY="627.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="26.0" prefWidth="162.0"
-              style="-fx-background-color: #EEC643; -fx-text-fill: #4B0082; -fx-border-color: #4B0082; -fx-border-width: 2px;" text="Register" />
+      <Button layoutX="214.0" layoutY="656.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #EEC643; -fx-text-fill: #4B0082; -fx-border-color: #4B0082; -fx-border-width: 2px;" text="Register" />
 
       <!-- Updated Guest Login Button -->
-      <Button layoutX="215.0" layoutY="663.0" mnemonicParsing="false" onAction="#handleGuestLogin" prefHeight="26.0" prefWidth="162.0"
-              style="-fx-background-color: transparent; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Guest Login" />
-      <TextField fx:id="usernameField" layoutX="215.0" layoutY="521.0" prefHeight="26.0" prefWidth="162.0" promptText="Username" />
-      <ImageView fitHeight="231.0" fitWidth="215.0" layoutX="-13.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+      <Button layoutX="214.0" layoutY="607.0" mnemonicParsing="false" onAction="#handleGuestLogin" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: transparent; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Guest Login" />
+      <TextField fx:id="usernameField" alignment="CENTER" layoutX="214.0" layoutY="502.0" prefHeight="26.0" prefWidth="162.0" promptText="Enter your username" />
+      <ImageView fitHeight="144.0" fitWidth="135.0" layoutX="232.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/wizard.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="450.0" layoutY="612.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="52.0" fitWidth="38.0" layoutX="437.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/scroll.png" />
          </image>
+         <effect>
+            <ColorAdjust brightness="0.47" contrast="0.33" hue="-0.07">
+               <input>
+                  <Glow />
+               </input></ColorAdjust>
+         </effect>
       </ImageView>
+      <PointLight layoutX="24.0" layoutY="692.0" lightOn="true">
+         <color>
+            <Color red="0.8129385709762573" green="0.8684210777282715" blue="0.5910087823867798" />
+         </color>
+      </PointLight>
+      <StackPane prefHeight="150.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

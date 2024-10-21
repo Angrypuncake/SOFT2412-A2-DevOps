@@ -7,7 +7,9 @@ import javafx.model.UserSession;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.utils.HashUtils;
+import javafx.utils.SceneUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
