@@ -1,6 +1,7 @@
 package javafx.controller;
 
 import database.Database;
+import java.util.*;
 import javafx.fxml.FXML;
 import javafx.model.UserSession;
 import javafx.scene.control.*;
@@ -82,7 +83,7 @@ public class UpdateProfileController {
     // Handle the update button click
     @FXML
     private void handleUpdateProfile() {
-        String id = idField.getText();
+        String newId = idField.getText();
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -93,7 +94,7 @@ public class UpdateProfileController {
         String userId = session.getUserId();
 
         //Validate ID
-        if (!id.matches("^[a-z0-9]+$") && !id.matches("^[0-9]+$")) {
+        if (!newId.matches("^[a-z0-9]+$") && !newId.matches("^[0-9]+$")) {
             showAlert("Error","ID must only contain lowercases and numbers.");
             return;
         }
@@ -123,21 +124,23 @@ public class UpdateProfileController {
         }
 
         // Check if id is already taken
-        try (Connection connection = Database.getConnection()) {
-            String query = "SELECT COUNT(*) FROM users WHERE id = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next() && resultSet.getInt(1) > 0) {
-                        showAlert("Error","ID is already taken, please choose another one!");
-                        return;
+        if (!newId.equals(userId)) {
+            try (Connection connection = Database.getConnection()) {
+                String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+                try (PreparedStatement statement = connection.prepareStatement(query)) {
+                    statement.setString(1, newId);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next() && resultSet.getInt(1) > 0) {
+                            showAlert("Error","ID is already taken, please choose another one!");
+                            return;
+                        }
                     }
                 }
+            } catch (SQLException e) {
+                showAlert("Error","Database error: " + e.getMessage());
+                e.printStackTrace();
+                return;
             }
-        } catch (SQLException e) {
-            showAlert("Error","Database error: " + e.getMessage());
-            e.printStackTrace();
-            return;
         }
 
         // Check if email is already used
@@ -199,72 +202,60 @@ public class UpdateProfileController {
         }
 
         StringBuilder updateSQL = new StringBuilder("UPDATE users SET ");
-        boolean hasUpdates = false;
+        List<String> updateFields = new ArrayList<>();
+        List<Object> updateValues = new ArrayList<>();
 
-        if (!id.isEmpty()) {
-            updateSQL.append("id = ?");
-            hasUpdates = true;
+        if (!newId.equals(userId)) {
+            updateFields.add("id = ?");
+            updateValues.add(newId);
         }
-
         if (!username.isEmpty()) {
-            updateSQL.append("username = ?, ");
-            hasUpdates = true;
+            updateFields.add("username = ?");
+            updateValues.add(username);
         }
         if (!email.isEmpty()) {
-            updateSQL.append("email = ?, ");
-            hasUpdates = true;
+            updateFields.add("email = ?");
+            updateValues.add(email);
         }
         if (!password.isEmpty()) {
-            updateSQL.append("password = ?, ");
-            hasUpdates = true;
+            updateFields.add("password = ?");
+            updateValues.add(HashUtils.hashPassword(password));
         }
         if (!phone.isEmpty()) {
-            updateSQL.append("phone = ?, ");
-            hasUpdates = true;
+            updateFields.add("phone = ?");
+            updateValues.add(phone);
         }
 
-        if (!hasUpdates) {
-            showAlert("Error", "No fields to update!");
+        if (updateFields.isEmpty()) {
+            showAlert("Information","No changes made. Profile remains the same");
             return;
         }
 
-        updateSQL.setLength(updateSQL.length() - 2);  // Remove trailing comma
-        updateSQL.append(" WHERE id = ?");  // Update using userId
+        updateSQL.append(String.join(", ", updateFields));
+        updateSQL.append(" WHERE id = ?");
 
         try (Connection connection = Database.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(updateSQL.toString())) {
-                int parameterIndex = 1;
+            String query = updateSQL.toString();
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
 
-                if (!id.isEmpty()) {
-                    statement.setString(parameterIndex++, id);
+                for (int i = 0; i < updateValues.size(); i++) {
+                    statement.setObject(i + 1, updateValues.get(i));
                 }
-
-                if (!username.isEmpty()) {
-                    statement.setString(parameterIndex++, username);
-                }
-                if (!email.isEmpty()) {
-                    statement.setString(parameterIndex++, email);
-                }
-                if (!password.isEmpty()) {
-                    statement.setString(parameterIndex++, HashUtils.hashPassword(password));
-                }
-                if (!phone.isEmpty()) {
-                    statement.setString(parameterIndex++, phone);
-                }
-
-                // Bind the userId to the last parameter
-                statement.setString(parameterIndex, userId);
+                statement.setString(updateValues.size() + 1, userId);
 
                 int rowsUpdated = statement.executeUpdate();
                 if (rowsUpdated > 0) {
-                    showAlert("Success", "Profile updated successfully!");
+                    showAlert("Success","Profile updated successfully");
+                    if (!newId.equals(userId)) {
+                        session.setUserId(newId);
+                    }
                 } else {
-                    showAlert("Error", "Profile update failed.");
+                    showAlert("Error","Profile update failed");
                 }
             }
         } catch (SQLException e) {
+            showAlert("Error","Database error: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Error", "An error occurred while updating the profile.");
         }
     }
 
