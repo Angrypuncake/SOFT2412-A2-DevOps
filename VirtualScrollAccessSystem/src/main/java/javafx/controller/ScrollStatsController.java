@@ -20,6 +20,7 @@ import static javafx.utils.SceneUtil.switchScene;
 
 public class ScrollStatsController {
     public ObservableList<ScrollStats> scrollStats;
+    public Button toggleOrphanedButton;
     private FilteredList<ScrollStats> filteredScrollStats; // Filtered list based on toggle
     public Button deleteButton;
     public Button updateButton;
