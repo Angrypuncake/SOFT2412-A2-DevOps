@@ -57,3 +57,88 @@
     -fx-text-fill: blue;
 }
 
+.button {
+    -fx-font-family: "Times New Roman"; /* Apply to buttons */
+    -fx-text-fill: #FFD700; /* Soft gold text for a magical feel */
+    -fx-background-color: #4B0082; /* Rich indigo background */
+    -fx-border-color: #FFD700; /* Gold border to highlight the button */
+    -fx-border-width: 2px; /* Optional: add a border for a more defined look */
+}
+
+.button:hover {
+    -fx-background-color: #5D3FD3; /* Lighter glowing indigo on hover */
+    -fx-text-fill: #F0F8FF; /* Silvery white text when hovered */
+}
+
+
+/* TextFields and PasswordFields */
+.text-field, .password-field {
+    -fx-background-color: #2C1A47; /* Soft indigo background for magical feel */
+    -fx-text-fill: #F0F8FF; /* Silvery white text */
+    -fx-border-color: #FFD700; /* Gold border for magical touch */
+    -fx-border-width: 2px; /* Visible border */
+    -fx-prompt-text-fill: #DCDCDC; /* Light grey for placeholder text */
+    -fx-background-radius: 5; /* Rounded corners for a smoother look */
+}
+
+/* On focus */
+.text-field:focused, .password-field:focused {
+    -fx-background-color: #3C096C; /* Darker purple when focused */
+    -fx-border-color: #EEC643; /* Lighter gold border when focused */
+    -fx-text-fill: #FFFFFF; /* Bright white text when focused */
+}
+
+/* TextAreas */
+.text-area {
+    -fx-background-color: #2C1A47; /* Soft indigo background */
+    -fx-text-fill: #F0F8FF; /* Silvery white text */
+    -fx-border-color: #FFD700; /* Gold border for magical touch */
+    -fx-border-width: 2px; /* Visible gold border */
+    -fx-prompt-text-fill: #DCDCDC; /* Light grey for placeholder text */
+    -fx-background-radius: 5; /* Rounded corners for smoother look */
+    -fx-control-inner-background: #2C1A47; /* Ensures inner text area uses same background */
+}
+
+/* On focus */
+.text-area:focused {
+    -fx-background-color: #3C096C; /* Darker purple when focused */
+    -fx-border-color: #EEC643; /* Lighter gold border when focused */
+    -fx-text-fill: #FFFFFF; /* Bright white text when focused */
+}
+
+/* Scroll bars inside table views */
+.table-view .scroll-bar {
+    -fx-background-color: #2C1A47; /* Soft indigo background for scroll bar */
+}
+
+.table-view .scroll-bar .thumb {
+    -fx-background-color: #FFD700; /* Gold thumb for the magical feel */
+    -fx-background-radius: 5; /* Rounded thumb corners */
+}
+
+.table-view .scroll-bar .increment-button,
+.table-view .scroll-bar .decrement-button {
+    -fx-background-color: #4B0082; /* Dark indigo for scroll buttons */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-padding: 3; /* Make them a bit smaller */
+}
+
+.table-view .scroll-bar .track {
+    -fx-background-color: #3C096C; /* Dark purple track for magical feel */
+    -fx-background-radius: 5; /* Rounded corners for the track */
+}
+
+/* When the thumb is hovered */
+.table-view .scroll-bar .thumb:hover {
+    -fx-background-color: #EEC643; /* Lighter gold on hover */
+}
+
+/* Vertical Scroll Bar */
+.table-view .scroll-bar:vertical .thumb {
+    -fx-min-height: 20px; /* Minimum size for vertical scroll thumb */
+}
+
+/* Horizontal Scroll Bar */
+.table-view .scroll-bar:horizontal .thumb {
+    -fx-min-width: 20px; /* Minimum size for horizontal scroll thumb */
+}

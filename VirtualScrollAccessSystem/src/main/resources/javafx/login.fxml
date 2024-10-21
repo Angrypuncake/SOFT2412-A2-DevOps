@@ -42,9 +42,17 @@
       </Label>
       <Label fx:id="errorMessageLabel" alignment="CENTER" layoutX="217.0" layoutY="716.0" prefHeight="17.0" prefWidth="160.0" textAlignment="CENTER" textFill="#fc0000" />
       <PasswordField fx:id="passwordField" layoutX="215.0" layoutY="557.0" prefHeight="26.0" prefWidth="162.0" promptText="Password" />
-      <Button layoutX="215.0" layoutY="591.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #0cfa54;" text="Login" />
-      <Button layoutX="215.0" layoutY="627.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #fff203;" text="Register" />
-      <Button layoutX="215.0" layoutY="663.0" mnemonicParsing="false" onAction="#handleGuestLogin" prefHeight="26.0" prefWidth="162.0" text="Guest Login" />
+      <!-- Updated Login Button -->
+      <Button layoutX="215.0" layoutY="591.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="26.0" prefWidth="162.0"
+              style="-fx-background-color: #4B0082; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Login" />
+
+      <!-- Updated Register Button -->
+      <Button layoutX="215.0" layoutY="627.0" mnemonicParsing="false" onAction="#switchToRegister" prefHeight="26.0" prefWidth="162.0"
+              style="-fx-background-color: #EEC643; -fx-text-fill: #4B0082; -fx-border-color: #4B0082; -fx-border-width: 2px;" text="Register" />
+
+      <!-- Updated Guest Login Button -->
+      <Button layoutX="215.0" layoutY="663.0" mnemonicParsing="false" onAction="#handleGuestLogin" prefHeight="26.0" prefWidth="162.0"
+              style="-fx-background-color: transparent; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Guest Login" />
       <TextField fx:id="usernameField" layoutX="215.0" layoutY="521.0" prefHeight="26.0" prefWidth="162.0" promptText="Username" />
       <ImageView fitHeight="231.0" fitWidth="215.0" layoutX="-13.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
          <image>

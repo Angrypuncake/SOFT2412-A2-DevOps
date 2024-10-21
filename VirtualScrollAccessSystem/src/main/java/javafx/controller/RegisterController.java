@@ -30,11 +30,11 @@ public class RegisterController {
 
     private void setDefaultId() {
         try (Connection connection = Database.getConnection()) {
-            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 800000001";
+            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 2";
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(query)) {
-                int startId = 800000001;
-                if (resultSet.next() && resultSet.getInt(1) >= 800000001) {
+                int startId = 2;
+                if (resultSet.next() && resultSet.getInt(1) >= 2) {
                     startId = resultSet.getInt(1) + 1;
                 }
                 idField.setText(String.valueOf(startId));
