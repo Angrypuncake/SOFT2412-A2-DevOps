@@ -1,6 +1,7 @@
 package javafx.controller;
 
 import database.Database;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -19,6 +20,7 @@ import static javafx.utils.SceneUtil.switchScene;
 
 public class ScrollStatsController {
     public ObservableList<ScrollStats> scrollStats;
+    public Button toggleOrphanedButton;
     private FilteredList<ScrollStats> filteredScrollStats; // Filtered list based on toggle
     public Button deleteButton;
     public Button updateButton;
@@ -171,4 +173,25 @@ public class ScrollStatsController {
             filteredScrollStats.setPredicate(scroll -> !scroll.isOrphaned());
         }
     }
+
+    @FXML
+    private void handleToggleOrphaned() {
+        ScrollStats selectedScroll = scrollTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedScroll != null) {
+            // Toggle the orphaned status
+            boolean newOrphanedStatus = !selectedScroll.isOrphaned();
+            selectedScroll.setOrphaned(newOrphanedStatus);
+
+            // Update the orphaned label in the UI
+            orphanedLabel.setText("Status: " + (newOrphanedStatus ? "Orphaned" : "Active"));
+
+            // Update the status in the database
+            Database.toggleOrphanedInDatabase(selectedScroll);
+        } else {
+            System.out.println("No scroll selected");
+        }
+    }
+
+
 }

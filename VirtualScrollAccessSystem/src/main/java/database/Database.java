@@ -67,15 +67,14 @@ public class Database {
             CREATE TABLE IF NOT EXISTS scrollStats (
                 id TEXT PRIMARY KEY NOT NULL,  -- Foreign key from scrolls
                 name VARCHAR(255) UNIQUE NOT NULL,  -- Unique name of the scroll
-                uploader_id INT NOT NULL,
+                uploader_name TEXT,
+                uploader_id INT,
                 upload_count INT DEFAULT 0,
                 download_count INT DEFAULT 0,
                 orphaned BOOLEAN DEFAULT FALSE,  -- Indicates if the associated scroll has been deleted
                 FOREIGN KEY (id) REFERENCES scrolls(id) ON UPDATE CASCADE  -- Use id as the foreign key
             );
         """;
-
-
             // Step 4: Execute the SQL statements to create the tables
             statement.execute(createUserTableSQL);
             statement.execute(createScrollsTableSQL);
@@ -237,9 +236,11 @@ public class Database {
         String updateScrollSQL = "UPDATE scrolls SET name = ?, uploader_id = ?, upload_date = ?, file_size = ?, file_path = ? WHERE id = ?";
 
         String checkStatsSQL = "SELECT * FROM scrollStats WHERE id = ?";
-        String insertStatsSQL = "INSERT INTO scrollStats (id, name, uploader_id, upload_count, download_count, orphaned) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertStatsSQL = "INSERT INTO scrollStats (id, name, uploader_name, uploader_id, upload_count, download_count, orphaned) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String updateStatsSQL = "UPDATE scrollStats SET upload_count = upload_count + 1 WHERE id = ?";
         String unmarkOrphanedSQL = "UPDATE scrollStats SET orphaned = FALSE WHERE id = ?";
+
+        String getUploaderNameSQL = "SELECT username FROM users WHERE id = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement checkScrollStatement = connection.prepareStatement(checkScrollSQL);
@@ -248,14 +249,18 @@ public class Database {
              PreparedStatement checkStatsStatement = connection.prepareStatement(checkStatsSQL);
              PreparedStatement insertStatsStatement = connection.prepareStatement(insertStatsSQL);
              PreparedStatement updateStatsStatement = connection.prepareStatement(updateStatsSQL);
-             PreparedStatement unmarkOrphanedStatement = connection.prepareStatement(unmarkOrphanedSQL)) {
+             PreparedStatement unmarkOrphanedStatement = connection.prepareStatement(unmarkOrphanedSQL);
+             PreparedStatement getUploaderNameStatement = connection.prepareStatement(getUploaderNameSQL)) {
 
             // Check if the scroll already exists
             checkScrollStatement.setString(1, id);
             ResultSet scrollResultSet = checkScrollStatement.executeQuery();
 
+            System.out.println("blah");
+
             if (scrollResultSet.next()) {
                 // Scroll exists, update it
+                System.out.println("updating");
                 updateScrollStatement.setString(1, name);
                 updateScrollStatement.setString(2, uploaderId);
                 updateScrollStatement.setTimestamp(3, java.sql.Timestamp.valueOf(uploadDate));
@@ -265,6 +270,7 @@ public class Database {
                 updateScrollStatement.executeUpdate();
             } else {
                 // Scroll does not exist, insert it
+                System.out.println("Inserting");
                 insertScrollStatement.setString(1, id);
                 insertScrollStatement.setString(2, name);
                 insertScrollStatement.setString(3, uploaderId);
@@ -272,6 +278,20 @@ public class Database {
                 insertScrollStatement.setLong(5, fileSize);
                 insertScrollStatement.setString(6, relativeFilePath);
                 insertScrollStatement.executeUpdate();
+            }
+
+            // Fetch the uploader's username
+            getUploaderNameStatement.setString(1, uploaderId);
+            ResultSet uploaderResultSet = getUploaderNameStatement.executeQuery();
+            String uploaderName = null;
+
+            if (uploaderResultSet.next()) {
+                uploaderName = uploaderResultSet.getString("username");
+            }
+
+            // If the username is not found, throw an error or handle it as needed
+            if (uploaderName == null) {
+                throw new SQLException("Uploader username not found for uploader ID: " + uploaderId);
             }
 
             // Check if the scrollStats entry already exists
@@ -289,16 +309,19 @@ public class Database {
                 }
             } else {
                 // scrollStats entry does not exist, insert a new entry with upload_count set to 1 and orphaned set to false
+                System.out.println("Trying to insert scroll stat");
                 insertStatsStatement.setString(1, id);
                 insertStatsStatement.setString(2, name);
-                insertStatsStatement.setString(3, uploaderId);
-                insertStatsStatement.setInt(4, 1); // Initial upload_count is 1
-                insertStatsStatement.setInt(5, 0); // Initial download_count is 0
-                insertStatsStatement.setBoolean(6, false); // Not orphaned
+                insertStatsStatement.setString(3, uploaderName);
+                insertStatsStatement.setString(4, uploaderId);
+                insertStatsStatement.setInt(5, 1); // Initial upload_count is 1
+                insertStatsStatement.setInt(6, 0); // Initial download_count is 0
+                insertStatsStatement.setBoolean(7, false); // Not orphaned
                 insertStatsStatement.executeUpdate();
             }
         }
     }
+
 
 
 
@@ -427,7 +450,7 @@ public class Database {
         String query = """
         SELECT ss.id, u.username, ss.upload_count, ss.download_count, ss.name, ss.orphaned
         FROM scrollStats ss
-        LEFT JOIN users u ON ss.uploader_id = u.id
+        LEFT JOIN users u ON ss.uploader_name = u.username
         LEFT JOIN scrolls s ON ss.id = s.id
     """;
 
@@ -443,9 +466,10 @@ public class Database {
                 int uploadCount = resultSet.getInt("upload_count");
                 int downloadCount = resultSet.getInt("download_count");
                 boolean orphaned = resultSet.getBoolean("orphaned");  // Check if orphaned
+                int uploaderId = resultSet.getInt("id");
 
                 // Create a ScrollStats object and add it to the list
-                ScrollStats scrollStat = new ScrollStats(name, uploaderName, uploadCount, downloadCount, orphaned);
+                ScrollStats scrollStat = new ScrollStats(name, uploaderName, uploaderId, uploadCount, downloadCount, orphaned);
                 scrollStatsList.add(scrollStat);
             }
         } catch (SQLException e) {
@@ -539,6 +563,20 @@ public class Database {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error while deleting scroll stats: " + e.getMessage(), e);
+        }
+    }
+
+    public static void toggleOrphanedInDatabase(ScrollStats scrollStats) {
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("UPDATE scrollStats SET orphaned = ? WHERE name = ?")) {
+
+            stmt.setBoolean(1, scrollStats.isOrphaned());
+            stmt.setString(2, scrollStats.getName());
+            stmt.executeUpdate();
+
+            System.out.println("Scroll stats updated: " + scrollStats.getName() + " isOrphaned: " + scrollStats.isOrphaned());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

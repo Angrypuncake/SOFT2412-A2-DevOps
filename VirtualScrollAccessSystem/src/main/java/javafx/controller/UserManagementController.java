@@ -99,18 +99,35 @@ public class UserManagementController {
     }
 
     private void deleteUser(UsersManage user) {
-        String query = "DELETE FROM users WHERE id = ?";
+        // Query to set scrollStats as orphaned (inactive) before deleting the user
+        String updateScrollStatsQuery = "UPDATE scrollStats SET orphaned = TRUE WHERE uploader_id = ?";
+        // Query to delete the user
+        String deleteUserQuery = "DELETE FROM users WHERE id = ?";
 
         try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, user.getId());
-            stmt.executeUpdate();
-            System.out.println("User deleted: " + user.getName());
+             PreparedStatement updateScrollStatsStmt = conn.prepareStatement(updateScrollStatsQuery);
+             PreparedStatement deleteUserStmt = conn.prepareStatement(deleteUserQuery)) {
+
+            // Step 1: Set associated scrollStats to orphaned (inactive)
+            updateScrollStatsStmt.setString(1, user.getId());
+            int scrollStatsUpdated = updateScrollStatsStmt.executeUpdate();
+            System.out.println(scrollStatsUpdated + " scroll stats set to orphaned for user: " + user.getName());
+
+            // Step 2: Delete the user
+            deleteUserStmt.setString(1, user.getId());
+            int userDeleted = deleteUserStmt.executeUpdate();
+            if (userDeleted > 0) {
+                System.out.println("User deleted: " + user.getName());
+            } else {
+                System.out.println("No user found with ID: " + user.getId());
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     private void handleAddUser() {
