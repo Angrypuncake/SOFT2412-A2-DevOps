@@ -29,6 +29,10 @@
             </font>
         </Label>
 
+        <!-- ID -->
+        <Label text="Username" />
+        <TextField fx:id="idField" prefHeight="50.0" prefWidth="400.0" promptText="Enter new ID" />
+
         <!-- Username -->
         <Label text="Username" />
         <TextField fx:id="usernameField" prefHeight="50.0" prefWidth="400.0" promptText="Enter new username" />

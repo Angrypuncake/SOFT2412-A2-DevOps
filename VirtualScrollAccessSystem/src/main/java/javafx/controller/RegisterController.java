@@ -17,11 +17,33 @@ import static javafx.utils.SceneUtil.switchScene;
 
 public class RegisterController {
 
+    @FXML private TextField idField;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
     @FXML private Label errorMessageLabel;
+
+    public void initialize() {
+        setDefaultId();
+    }
+
+    private void setDefaultId() {
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 800000001";
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                int startId = 800000001;
+                if (resultSet.next() && resultSet.getInt(1) >= 800000001) {
+                    startId = resultSet.getInt(1) + 1;
+                }
+                idField.setText(String.valueOf(startId));
+            }
+        } catch (SQLException e) {
+            errorMessageLabel.setText("Database Error getting ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     // Method called when Register button is clicked
     @FXML
@@ -30,22 +52,13 @@ public class RegisterController {
         String password = passwordField.getText();
         String email = emailField.getText();
         String phone = phoneField.getText();
-        int startId = 800000001;
-        try (Connection connection = Database.getConnection()) {
-            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 800000001";
-            try (Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery(query)) {
-                if (resultSet.next() && resultSet.getInt(1) >= 800000001) {
-                    startId = resultSet.getInt(1) + 1;
-                }
-            }
-        } catch (SQLException e) {
-            errorMessageLabel.setText("Database Error: " + e.getMessage());
-            e.printStackTrace();
+        String id = idField.getText();
+
+        //Validate ID
+        if (!id.matches("^[a-z0-9]+$") && !id.matches("^[0-9]+$")) {
+            errorMessageLabel.setText("ID must only contain lowercases and numbers.");
             return;
         }
-
-        String id = String.valueOf(startId);
 
         // Validate input fields
         if (username.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty()) {
@@ -74,6 +87,24 @@ public class RegisterController {
         // Validate email format
         if (!email.contains("@") || !email.contains(".")) {
             errorMessageLabel.setText("Please enter a valid email address!");
+            return;
+        }
+
+        // Check if id is already taken
+        try (Connection connection = Database.getConnection()) {
+            String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt(1) > 0) {
+                        errorMessageLabel.setText("ID is already taken, please choose another one!");
+                        return;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            errorMessageLabel.setText("Database error: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
 
@@ -169,6 +200,7 @@ public class RegisterController {
     }
     // Clear input fields after successful registration
     private void clearFields() {
+        idField.clear();
         usernameField.clear();
         passwordField.clear();
         emailField.clear();

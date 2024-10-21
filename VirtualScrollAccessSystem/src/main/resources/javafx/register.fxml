@@ -11,6 +11,7 @@
 
     <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Register" />
 
+    <TextField fx:id="idField" maxWidth="200" promptText="ID" editable="true" />
     <TextField fx:id="usernameField" maxWidth="200" promptText="Username" />
     <PasswordField fx:id="passwordField" maxWidth="200" promptText="Password" />
     <TextField fx:id="emailField" maxWidth="200" promptText="Email" />
