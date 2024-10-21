@@ -37,6 +37,8 @@
       <Button fx:id="adminShadow" layoutY="1.0" mnemonicParsing="false" onAction="#handleAdminShadow" text="Admin" />
       <Button fx:id="normalShadow" layoutX="54.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleNormalShadow" text="Normal" />
       <Button fx:id="guestShadow" layoutX="111.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleGuestShadow" text="Guest" />
-      <Label fx:id="userLabel" contentDisplay="CENTER" layoutX="425.0" layoutY="26.0" text="Label" />
+      <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" alignment="CENTER" prefWidth="400" layoutX="100" layoutY="425.0">
+         <Label fx:id="userLabel" alignment="CENTER" contentDisplay="CENTER" wrapText="true" layoutY="425.0" text="Label" />
+      </VBox>
    </children>
 </AnchorPane>

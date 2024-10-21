@@ -52,7 +52,7 @@
     <!-- Download button -->
     <Button onAction="#handleDownload" prefWidth="200" text="Download Selected Scroll" />
 
-    <VBox spacing="10">
+    <VBox spacing="10" >
         <!-- Label as the title -->
         <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Preview" />
 
