@@ -35,6 +35,11 @@
         <Label text="Email" />
         <TextField fx:id="emailField" prefHeight="50.0" prefWidth="400.0" promptText="Enter new email" />
 
+        <Label text="Full Name" />
+        <TextField fx:id="fullNameField" prefHeight="50.0" prefWidth="400.0" promptText="Enter new full name" />
+
+
+
         <!-- Password -->
         <Label text="Password" />
         <PasswordField fx:id="passwordField" prefHeight="50.0" prefWidth="400.0" promptText="Enter new password" />

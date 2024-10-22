@@ -18,6 +18,7 @@ import static javafx.utils.SceneUtil.switchScene;
 
 public class UpdateProfileController {
 
+    public TextField fullNameField;
     @FXML
     private TextField usernameField;
     @FXML
@@ -55,7 +56,7 @@ public class UpdateProfileController {
         UserSession session = UserSession.getInstance();
         String userId = session.getUserId();
 
-        String query = "SELECT username, email, phone FROM users WHERE id = ?";
+        String query = "SELECT username, email, full_name, phone FROM users WHERE id = ?";
 
         try (Connection connection = Database.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -66,11 +67,13 @@ public class UpdateProfileController {
                     String username = resultSet.getString("username");
                     String email = resultSet.getString("email");
                     String phone = resultSet.getString("phone");
+                    String full_name = resultSet.getString("full_name");
 
                     usernameField.setText(username);
                     emailField.setText(email);
                     phoneField.setText(phone);
                     idField.setText(userId);
+                    fullNameField.setText(full_name);
 
                 }
             }
@@ -88,6 +91,7 @@ public class UpdateProfileController {
         String email = emailField.getText();
         String password = passwordField.getText();
         String phone = phoneField.getText();
+        String fullname = fullNameField.getText();
 
         // Get the current user's ID from the session
         UserSession session = UserSession.getInstance();
@@ -228,6 +232,11 @@ public class UpdateProfileController {
         if (!phone.isEmpty()) {
             updateFields.add("phone = ?");
             updateValues.add(phone);
+        }
+
+        if(!fullname.isEmpty()) {
+            updateFields.add("full_name = ?");
+            updateValues.add(fullname);
         }
 
         if (updateFields.isEmpty()) {

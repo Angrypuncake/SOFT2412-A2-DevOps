@@ -44,6 +44,7 @@ public class Database {
                 id TEXT PRIMARY KEY,
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
+                full_name TEXT,
                 email TEXT UNIQUE NOT NULL,
                 phone TEXT,
                 userType TEXT NOT NULL

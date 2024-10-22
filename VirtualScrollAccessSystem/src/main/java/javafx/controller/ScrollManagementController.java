@@ -239,14 +239,32 @@ public class ScrollManagementController {
 
     private void loadScrollContent(Scroll selectedScroll) {
         try {
-            // Load the scroll file content into the TextArea
+            // Get the scroll file
             Path scrollPath = selectedScroll.getBinaryFile().toPath();
-            String scrollContent = Files.readString(scrollPath);
-            scrollContentTextArea.setText(scrollContent);
+
+            // Get the file name and extension
+            String fileName = scrollPath.getFileName().toString();
+            int dotIndex = fileName.lastIndexOf(".");
+
+            // Check if the file has no extension or is an editable text format
+            if (dotIndex == -1 || fileName.endsWith(".txt") || fileName.endsWith(".md") || fileName.endsWith(".json")
+                    || fileName.endsWith(".csv") || fileName.endsWith(".xml") || fileName.endsWith(".html")
+                    || fileName.endsWith(".log") || fileName.endsWith(".ini") || fileName.endsWith(".yaml")
+                    || fileName.endsWith(".yml")) {
+
+                // Load the scroll file content into the TextArea
+                String scrollContent = Files.readString(scrollPath);
+                scrollContentTextArea.setText(scrollContent);
+            } else {
+                // If the file is not a .txt or editable, show an alert or skip loading
+                showAlert(Alert.AlertType.WARNING, "Unsupported File Type", "The selected scroll is not an editable text file.");
+            }
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load scroll content: " + e.getMessage());
         }
     }
+
+
 
 
 

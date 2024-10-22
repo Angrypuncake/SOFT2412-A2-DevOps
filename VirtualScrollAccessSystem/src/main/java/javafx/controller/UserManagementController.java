@@ -15,6 +15,8 @@ import java.util.UUID;
 import static javafx.utils.SceneUtil.switchScene;
 
 public class UserManagementController {
+    public TextField fullNameField;
+    public Label fullNameTextField;
     @FXML private ListView<UsersManage> userListView;
     @FXML private Label nameTextField;
     @FXML private Label emailTextField;
@@ -52,7 +54,7 @@ public class UserManagementController {
 
     private void loadUsersFromDatabase() {
 
-        String query = "SELECT id, username, email, phone FROM users";
+        String query = "SELECT id, username, full_name, email, phone FROM users";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -62,8 +64,9 @@ public class UserManagementController {
                 String id = rs.getString("id");
                 String name = rs.getString("username");
                 String email = rs.getString("email");
+                String full_name = rs.getString("full_name");
                 String phone = rs.getString("phone");
-                UsersManage user = new UsersManage(id,name,email,phone);
+                UsersManage user = new UsersManage(id,name,full_name,email,phone);
                 userList.add(user);
             }
 
@@ -134,13 +137,14 @@ public class UserManagementController {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String email = emailField.getText();
+        String fullName = fullNameField.getText();
         String phone = phoneField.getText();
-        int startId = 800000001;
+        int startId = 2;
         try (Connection connection = Database.getConnection()) {
-            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 800000001";
+            String query = "SELECT MAX(CAST(id AS INTEGER)) FROM users WHERE CAST(id as INTEGER) >= 2";
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(query)) {
-                if (resultSet.next() && resultSet.getInt(1) >= 800000001) {
+                if (resultSet.next() && resultSet.getInt(1) >= 2) {
                     startId = resultSet.getInt(1) + 1;
                 }
             }
@@ -168,6 +172,13 @@ public class UserManagementController {
             errorMessage.setText("Password must be at least 8 characters long and contain at least an uppercase");
             return;
         }
+
+        // Validate full name format
+        if (!fullName.matches("^[A-Za-z ]+$")) {
+            errorMessage.setText("Full Name can only contain letters and spaces");
+            return;
+        }
+
 
         // Validate phone
         if (!phone.matches("\\d+")) {
@@ -240,20 +251,21 @@ public class UserManagementController {
         String hashedPassword = HashUtils.hashPassword(password);
 
         try (Connection connection = Database.getConnection()) {
-            String insertUser = "INSERT INTO users (id, username, password, email, phone, userType) VALUES (?, ?, ?, ?, ?, ?)";
+            String insertUser = "INSERT INTO users (id, username, password, full_name, email, phone, userType) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(insertUser)) {
                 statement.setString(1, id);
                 statement.setString(2, username);
                 statement.setString(3, hashedPassword);
-                statement.setString(4, email);
-                statement.setString(5, phone);
-                statement.setString(6, "Normal");
+                statement.setString(4,fullName);
+                statement.setString(5, email);
+                statement.setString(6, phone);
+                statement.setString(7, "Normal");
 
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
                     errorMessage.setText("User successfully registered!");
-                    UsersManage newUser = new UsersManage(id, username, email, phone);
+                    UsersManage newUser = new UsersManage(id, username, fullName, email, phone);
                     userList.add(newUser);
                     clearFields();
                 } else {

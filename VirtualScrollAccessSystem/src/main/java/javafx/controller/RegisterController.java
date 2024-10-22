@@ -23,6 +23,7 @@ public class RegisterController {
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
     @FXML private Label errorMessageLabel;
+    @FXML private TextField fullNameField;
 
     public void initialize() {
         setDefaultId();
@@ -50,6 +51,7 @@ public class RegisterController {
     public void handleRegister() {
         String username = usernameField.getText();
         String password = passwordField.getText();
+        String fullName = fullNameField.getText();
         String email = emailField.getText();
         String phone = phoneField.getText();
         String id = idField.getText();
@@ -63,6 +65,11 @@ public class RegisterController {
         // Validate input fields
         if (username.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty()) {
             errorMessageLabel.setText("All fields are required!");
+            return;
+        }
+
+        if (fullName.isEmpty()) {
+            errorMessageLabel.setText("Full name is required!");
             return;
         }
 
@@ -169,15 +176,16 @@ public class RegisterController {
 
         // Proceed with registration and store the user in the database
         try (Connection connection = Database.getConnection()) {
-            String insertUser = "INSERT INTO users (id, username, password, email, phone, userType) VALUES (?, ?, ?, ?, ?, ?)";
+            String insertUser = "INSERT INTO users (id, username, password, full_name, email, phone, userType) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(insertUser)) {
                 statement.setString(1, id);
                 statement.setString(2, username);
                 statement.setString(3, hashedPassword);  // Store the hashed password
-                statement.setString(4, email);
-                statement.setString(5, phone);
-                statement.setString(6, "Normal");  // Default user type is "Normal"
+                statement.setString(4, fullName);
+                statement.setString(5, email);
+                statement.setString(6, phone);
+                statement.setString(7, "Normal");  // Default user type is "Normal"
 
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
