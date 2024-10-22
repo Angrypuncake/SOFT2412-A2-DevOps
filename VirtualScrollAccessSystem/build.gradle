@@ -96,3 +96,12 @@ jacocoTestReport {
 tasks.test {
   finalizedBy jacocoTestReport // Automatically run JaCoCo after tests
 }
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/java']
+      exclude 'javafx/controller/**' // Exclude the directory from compilation
+    }
+  }
+}
