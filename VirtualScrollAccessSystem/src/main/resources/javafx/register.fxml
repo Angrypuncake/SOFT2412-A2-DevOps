@@ -12,6 +12,7 @@
     <TextField fx:id="idField" editable="true" maxWidth="200" promptText="ID" />
     <TextField fx:id="usernameField" maxWidth="200" promptText="Username" />
     <PasswordField fx:id="passwordField" maxWidth="200" promptText="Password" />
+    <TextField fx:id="fullNameField" maxWidth="200" promptText="Full Name" />
     <TextField fx:id="emailField" maxWidth="200" promptText="Email" />
     <TextField fx:id="phoneField" maxWidth="200" promptText="Phone Number" />
 

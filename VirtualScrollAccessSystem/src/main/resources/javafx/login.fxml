@@ -27,7 +27,7 @@
       <Label fx:id="loginLabel" layoutX="264.0" layoutY="451.0" text="Login" textFill="WHITE" />
 
       <Label fx:id="errorMessageLabel" alignment="CENTER" layoutX="216.0" layoutY="697.0" prefHeight="17.0" prefWidth="160.0" textAlignment="CENTER" textFill="#fc0000" />
-      <PasswordField fx:id="passwordField" alignment="CENTER" layoutX="214.0" layoutY="538.0" prefHeight="26.0" prefWidth="162.0" promptText="Enter your passweord" />
+      <PasswordField fx:id="passwordField" alignment="CENTER" layoutX="214.0" layoutY="538.0" prefHeight="26.0" prefWidth="162.0" promptText="Enter your password" />
       <!-- Updated Login Button -->
       <Button layoutX="214.0" layoutY="572.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #2C1A47; -fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-border-width: 2px;" text="Login" />
 
