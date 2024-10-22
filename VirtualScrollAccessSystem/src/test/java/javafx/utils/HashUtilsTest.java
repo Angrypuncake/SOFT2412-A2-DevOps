@@ -26,4 +26,15 @@ public class HashUtilsTest {
         // Verify the hashed password is not null
         assertNotNull(hash, "Hashed password should not be null");
     }
+
+    @Test
+    public void testHashScroll() {
+        String uploaderId = "myname";
+        String scrollName = "scrolltest";
+
+        String hash = HashUtils.hashScroll(uploaderId, scrollName);
+
+        // Verify the hashed password is not null
+        assertNotNull(hash, "Hashed password should not be null");
+    }
 }
