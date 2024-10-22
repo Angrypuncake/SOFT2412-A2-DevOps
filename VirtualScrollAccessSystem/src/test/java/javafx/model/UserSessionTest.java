@@ -90,4 +90,24 @@ class UserSessionTest {
         assertEquals("Guest", session.getRole());
         assertTrue(session.isGuest());
     }
+
+    @Test
+    void testSetUID() {
+        // Start a session without specifying the role (null)
+        UserSession.startSession("1", "testUser", null);
+        UserSession session = UserSession.getInstance();
+
+        session.setUserId("2");
+        assertEquals("2", session.getUserId());
+    }
+
+    @Test
+    void testShadow() {
+        // Start a session without specifying the role (null)
+        UserSession.startSession("1", "testUser", null);
+        UserSession session = UserSession.getInstance();
+
+        session.setShadow("Guest");
+        assertEquals("Guest", session.getShadow());
+    }
 }
