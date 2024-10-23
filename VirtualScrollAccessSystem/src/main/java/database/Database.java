@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Handles all database operations and initialisation
-
 public class Database {
     private static Connection connection;
 
@@ -92,8 +91,6 @@ public class Database {
             throw new SQLException("Error during database setup: " + e.getMessage(), e);
         }
     }
-
-
 
     // Method to check if the admin exists in the database
     public static void ensureAdminUserExists() {
