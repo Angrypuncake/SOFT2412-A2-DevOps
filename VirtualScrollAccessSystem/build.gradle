@@ -107,6 +107,3 @@ jacocoTestReport {
 tasks.test {
   finalizedBy jacocoTestReport // Automatically run JaCoCo after tests
 }
-
-
-
