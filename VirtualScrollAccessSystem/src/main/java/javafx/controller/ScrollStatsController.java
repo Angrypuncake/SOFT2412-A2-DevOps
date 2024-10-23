@@ -175,7 +175,7 @@ public class ScrollStatsController {
     }
 
     @FXML
-    private void handleToggleOrphaned() {
+    private void handleToggleOrphaned() throws SQLException {
         ScrollStats selectedScroll = scrollTableView.getSelectionModel().getSelectedItem();
 
         if (selectedScroll != null) {

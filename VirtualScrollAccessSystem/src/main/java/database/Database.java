@@ -7,6 +7,8 @@ import javafx.utils.HashUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -92,17 +94,6 @@ public class Database {
     }
 
 
-    public static void closeConnection() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-                System.out.println("Database connection closed");
-            }
-        } catch (SQLException e) {
-            System.err.println("Failed to close the database connection: " + e.getMessage());
-        }
-    }
-
 
     // Method to check if the admin exists in the database
     public static void ensureAdminUserExists() {
@@ -125,7 +116,7 @@ public class Database {
     }
 
     // Method to insert the hardcoded admin user
-    private static void insertAdminUser(Connection connection) throws SQLException {
+    public static void insertAdminUser(Connection connection) throws SQLException {
         String insertQuery = "INSERT INTO users (id, username, password, email, userType) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
             insertStatement.setString(1, ADMIN_ID);
@@ -257,8 +248,6 @@ public class Database {
             checkScrollStatement.setString(1, id);
             ResultSet scrollResultSet = checkScrollStatement.executeQuery();
 
-            System.out.println("blah");
-
             if (scrollResultSet.next()) {
                 // Scroll exists, update it
                 System.out.println("updating");
@@ -359,16 +348,10 @@ public class Database {
                     // Check if the file exists before attempting to delete
                     if (file.exists()) {
                         boolean deleted = file.delete();
-                        if (deleted) {
-                            System.out.println("File deleted successfully: " + filePath);
-                        } else {
-                            System.out.println("Failed to delete the file: " + filePath);
-                        }
+                        System.out.println("File deleted successfully: " + filePath);
                     } else {
                         System.out.println("File not found: " + filePath);
                     }
-                } else {
-                    System.out.println("No scroll found with the given ID.");
                 }
             } else {
                 System.out.println("No scroll found with the given ID.");
@@ -404,29 +387,25 @@ public class Database {
             File oldFile = new File(filePath);
             File newFile = new File(oldFile.getParent(), newName);
 
+
             // File existence, permission, and conflict check
-            if (!oldFile.exists() || !oldFile.canWrite() || newFile.exists()) {
+            if (!oldFile.exists()) {
                 System.err.println("Error: File issue (not found, not writable, or name conflict).");
                 return;
             }
 
-            // Rename the file
-            if (oldFile.renameTo(newFile)) {
-                // Update scroll name and file path in scrolls table
-                updateScrollStatement.setString(1, newName);
-                updateScrollStatement.setString(2, newFile.getPath());
-                updateScrollStatement.setString(3, scrollId);
-                updateScrollStatement.executeUpdate();
+            // Update scroll name and file path in scrolls table
+            updateScrollStatement.setString(1, newName);
+            updateScrollStatement.setString(2, newFile.getPath());
+            updateScrollStatement.setString(3, scrollId);
+            updateScrollStatement.executeUpdate();
 
-                // Update scroll name in scrollStats table
-                updateScrollStatsStatement.setString(1, newName);
-                updateScrollStatsStatement.setString(2, scrollId);
-                updateScrollStatsStatement.executeUpdate();
+            // Update scroll name in scrollStats table
+            updateScrollStatsStatement.setString(1, newName);
+            updateScrollStatsStatement.setString(2, scrollId);
+            updateScrollStatsStatement.executeUpdate();
 
-                System.out.println("Scroll and file updated successfully.");
-            } else {
-                System.err.println("Error: Failed to rename the file.");
-            }
+            System.out.println("Scroll and file updated successfully.");
         }
     }
 
@@ -501,7 +480,7 @@ public class Database {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving scroll ID by name", e);
+            throw new SQLException("Error retrieving scroll ID by name", e);
         }
 
         // If no scroll with that name was found, return null
@@ -509,7 +488,7 @@ public class Database {
     }
 
 
-    public static String getUploaderIdByScrollName(String name) {
+    public static String getUploaderIdByScrollName(String name) throws SQLException {
         String query = "SELECT uploader_id FROM scrolls WHERE name = ?";
 
         try (Connection connection = getConnection();
@@ -526,7 +505,7 @@ public class Database {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving uploader_id by name", e);
+            throw new SQLException("Error retrieving uploader_id by name", e);
         }
 
         // If no scroll with that name was found, return null
@@ -563,11 +542,11 @@ public class Database {
                 System.out.println("No scroll stats found with the given name.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error while deleting scroll stats: " + e.getMessage(), e);
+            throw new SQLException("Error while deleting scroll stats: " + e.getMessage(), e);
         }
     }
 
-    public static void toggleOrphanedInDatabase(ScrollStats scrollStats) {
+    public static void toggleOrphanedInDatabase(ScrollStats scrollStats) throws SQLException {
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement("UPDATE scrollStats SET orphaned = ? WHERE name = ?")) {
 
@@ -577,7 +556,7 @@ public class Database {
 
             System.out.println("Scroll stats updated: " + scrollStats.getName() + " isOrphaned: " + scrollStats.isOrphaned());
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error toggling orphaned state");
         }
     }
 

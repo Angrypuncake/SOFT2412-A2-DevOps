@@ -91,17 +91,22 @@ jacocoTestReport {
     xml.required = true // Enable XML report for CI
     html.required = true // Enable HTML report for local viewing
   }
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+              'javafx/controller/**',          // Exclude all files in javafx/controller/
+              'javafx/utils/SceneUtil**',   // Exclude SceneUtil.java
+              'javafx/MainApp**'            // Exclude MainApp.java
+      ])
+    }))
+  }
+
+
 }
 
 tasks.test {
   finalizedBy jacocoTestReport // Automatically run JaCoCo after tests
 }
 
-sourceSets {
-  main {
-    java {
-      srcDirs = ['src/main/java']
-      exclude 'javafx/controller/**' // Exclude the directory from compilation
-    }
-  }
-}
+
+
