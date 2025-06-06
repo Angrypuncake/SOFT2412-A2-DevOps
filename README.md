@@ -50,15 +50,6 @@ This system was delivered across multiple sprints using DevOps principles, inclu
 
 See the [Releases](../../releases) tab for full deployment snapshots.
 
----
-
-## 📸 Visuals
-
-| Preview | Description |
-|--------|-------------|
-| _Coming Soon_ | Screenshots of UI, CI pipelines, and GitHub Projects board |
-
----
 
 ## 👥 Contributors
 
